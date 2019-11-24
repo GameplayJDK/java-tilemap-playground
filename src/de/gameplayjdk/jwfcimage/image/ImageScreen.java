@@ -18,7 +18,12 @@
 
 package de.gameplayjdk.jwfcimage.image;
 
-public class ImageScreen {
+import de.gameplayjdk.jwfcimage.engine.Sprite;
+import de.gameplayjdk.jwfcimage.engine.data.Tile;
+
+import java.util.Arrays;
+
+public class ImageScreen implements ImageDataInterface {
 
     private final int width;
     private final int height;
@@ -47,9 +52,7 @@ public class ImageScreen {
      * @param color
      */
     public void clear(int color) {
-        for (int index = 0; index < this.data.length; index++) {
-            this.data[index] = color;
-        }
+        Arrays.fill(this.data, color);
     }
 
     /**
@@ -114,6 +117,49 @@ public class ImageScreen {
         }
     }
 
+    /**
+     * @deprecated Prone to null pointer exception. Use {@link #drawSprite(int, int, Sprite)} instead in conjunction
+     * with null check.
+     */
+    public void drawTile(int x, int y, Tile tile) {
+        // TODO: Add null check.
+
+        this.drawSprite(x, y, tile.getSprite());
+    }
+
+    public void drawSprite(int x, int y, Sprite sprite) {
+        this.drawData(x, y, sprite);
+    }
+
+    public void drawData(int x, int y, ImageDataInterface imageData) {
+        this.drawData(x, y, imageData.getWidth(), imageData.getHeight(), imageData.getData());
+    }
+
+    public void drawData(int x, int y, int width, int height, int[] data) {
+        if (!this.isVisible(x, y) && !this.isVisible(x + width, y + height)
+                && !this.isVisible(x + width, y) && !this.isVisible(x, y + height)) {
+            return;
+        }
+
+        for (int w = 0; w < width; w++) {
+            for (int h = 0; h < height; h++) {
+                if (!this.isVisible(x + w, y + h)) {
+                    continue;
+                }
+
+                //System.out.println(((y + h) * this.width) + (x + w));
+
+                this.data[((y + h) * this.width) + (x + w)] = data[(h * width) + w];
+            }
+        }
+    }
+
+    public void show(ImageDataInterface imageData) {
+        this.show(
+                imageData.getData()
+        );
+    }
+
     public void show(int[] data) {
         if (data.length != this.data.length) {
             throw new IllegalArgumentException("Dimension mismatch! " + data.length + " != " + this.data.length);
@@ -123,7 +169,7 @@ public class ImageScreen {
     }
 
     private boolean isVisible(int x, int y) {
-        return ((x >= 0 || x < this.width) || (y >= 0 || y < this.height));
+        return ((x >= 0 && x < this.width) && (y >= 0 && y < this.height));
     }
 
     public int getWidth() {
@@ -132,5 +178,10 @@ public class ImageScreen {
 
     public int getHeight() {
         return this.height;
+    }
+
+    public int[] getData() {
+//        return Arrays.copyOf(this.data, this.data.length);
+        return this.data;
     }
 }

@@ -16,27 +16,18 @@
  * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package de.gameplayjdk.jwfcimage.image;
+package de.gameplayjdk.jwfcimage.engine.data.tile;
 
-import java.util.Arrays;
+import de.gameplayjdk.jwfcimage.engine.Color;
+import de.gameplayjdk.jwfcimage.engine.SpriteColor;
+import de.gameplayjdk.jwfcimage.engine.data.Tile;
+import de.gameplayjdk.jwfcimage.engine.data.TileMap;
 
-public interface ImageDataInterface {
+public class TileWater extends Tile {
 
-    /**
-     * @return The image data width.
-     */
-    public int getWidth();
+    public static Tile tile = new TileWater();
 
-    /**
-     * @return The image data height.
-     */
-    public int getHeight();
-
-    /**
-     * Return the image data array. Use {@link Arrays#copyOf(int[], int)} to prevent direct access to the
-     * data via this getter.
-     *
-     * @return The image data array.
-     */
-    public int[] getData();
+    public TileWater() {
+        super(Color.COLOR_TILE_WATER, new SpriteColor(TileMap.TILE_SIZE, Color.COLOR_TILE_WATER));
+    }
 }

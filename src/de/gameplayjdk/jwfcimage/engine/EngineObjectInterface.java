@@ -16,27 +16,13 @@
  * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package de.gameplayjdk.jwfcimage.image;
+package de.gameplayjdk.jwfcimage.engine;
 
-import java.util.Arrays;
+import de.gameplayjdk.jwfcimage.image.ImageScreen;
 
-public interface ImageDataInterface {
+public interface EngineObjectInterface {
 
-    /**
-     * @return The image data width.
-     */
-    public int getWidth();
+    public void update(double deltaTime);
 
-    /**
-     * @return The image data height.
-     */
-    public int getHeight();
-
-    /**
-     * Return the image data array. Use {@link Arrays#copyOf(int[], int)} to prevent direct access to the
-     * data via this getter.
-     *
-     * @return The image data array.
-     */
-    public int[] getData();
+    public void render(ImageScreen screen, int x, int y);
 }

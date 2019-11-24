@@ -16,42 +16,64 @@
  * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package de.gameplayjdk.jwfcimage;
+package de.gameplayjdk.jwfcimage.utility;
 
-import de.gameplayjdk.jwfcimage.image.ImageDataInterface;
-import de.gameplayjdk.jwfcimage.mvp.PresenterInterface;
-import de.gameplayjdk.jwfcimage.mvp.ViewInterface;
-import de.gameplayjdk.jwfcimage.utility.Velocity;
+public class Velocity {
 
-import java.io.File;
+    private double x;
+    private double y;
 
-public interface MainContractInterface {
-
-    public static interface View extends ViewInterface<MainContractInterface.Presenter> {
-
-        @Override
-        public void setPresenter(Presenter presenter);
-
-        public void openView();
-
-        public void closeView();
-
-        public void showOpenImageDialog();
-
-        public void showAboutDialog();
-
-        public void moveOffset(Velocity velocity);
+    public Velocity() {
+        this(0.0D, 0.0D);
     }
 
-    public static interface Presenter extends PresenterInterface {
+    public Velocity(double x, double y) {
+        this.set(x, y);
+    }
 
-        @Override
-        public void start();
+    public Velocity(Velocity velocity) {
+        this.set(velocity);
+    }
 
-        public void stop();
+    public void set(Velocity velocity) {
+        this.set(velocity.getX(), velocity.getY());
+    }
 
-        public void setImageData(ImageDataInterface imageData, Velocity velocity);
+    public void set(double x, double y) {
+        this.x = x;
+        this.y = y;
+    }
 
-        public void openImage(File file);
+    public void combine(Velocity velocity) {
+        this.set(this.x + velocity.getX(), this.y + velocity.getY());
+    }
+
+    public void combine(double x, double y) {
+        this.set(this.x + x, this.y + y);
+    }
+
+    public double getX() {
+        return this.x;
+    }
+
+    public void setX(double x) {
+        this.x = x;
+    }
+
+    public double getY() {
+        return this.y;
+    }
+
+    public void setY(double y) {
+        this.y = y;
+    }
+
+    public void reset() {
+        this.set(0.0D, 0.0D);
+    }
+
+    @Override
+    public String toString() {
+        return String.format("Velocity[x = %1$.2f, y = %2$.2f]", this.x, this.y);
     }
 }

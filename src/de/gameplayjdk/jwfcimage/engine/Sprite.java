@@ -16,27 +16,35 @@
  * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package de.gameplayjdk.jwfcimage.image;
+package de.gameplayjdk.jwfcimage.engine;
 
-import java.util.Arrays;
+import de.gameplayjdk.jwfcimage.image.ImageDataInterface;
 
-public interface ImageDataInterface {
+public class Sprite implements ImageDataInterface {
 
-    /**
-     * @return The image data width.
-     */
-    public int getWidth();
+    protected final int size;
 
-    /**
-     * @return The image data height.
-     */
-    public int getHeight();
+    protected final int[] data;
 
-    /**
-     * Return the image data array. Use {@link Arrays#copyOf(int[], int)} to prevent direct access to the
-     * data via this getter.
-     *
-     * @return The image data array.
-     */
-    public int[] getData();
+    public Sprite(int size) {
+        this.size = size;
+
+        this.data = new int[this.size * this.size];
+    }
+
+    public int getSize() {
+        return this.size;
+    }
+
+    public int getWidth() {
+        return this.getSize();
+    }
+
+    public int getHeight() {
+        return this.getSize();
+    }
+
+    public int[] getData() {
+        return this.data;
+    }
 }

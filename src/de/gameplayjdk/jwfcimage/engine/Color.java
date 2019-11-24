@@ -16,27 +16,13 @@
  * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package de.gameplayjdk.jwfcimage.image;
+package de.gameplayjdk.jwfcimage.engine;
 
-import java.util.Arrays;
+public final class Color {
 
-public interface ImageDataInterface {
+    public static final int COLOR_SPRITE_BORDER = 0x00FF00;
 
-    /**
-     * @return The image data width.
-     */
-    public int getWidth();
-
-    /**
-     * @return The image data height.
-     */
-    public int getHeight();
-
-    /**
-     * Return the image data array. Use {@link Arrays#copyOf(int[], int)} to prevent direct access to the
-     * data via this getter.
-     *
-     * @return The image data array.
-     */
-    public int[] getData();
+    public static final int COLOR_TILE_VOID = 0x000000;
+    public static final int COLOR_TILE_WATER = 0x0000FF;
+    public static final int COLOR_TILE_GROUND = 0x964B00;
 }

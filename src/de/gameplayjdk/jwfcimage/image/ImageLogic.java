@@ -18,44 +18,54 @@
 
 package de.gameplayjdk.jwfcimage.image;
 
+import de.gameplayjdk.jwfcimage.engine.data.TileMap;
 import de.gameplayjdk.jwfcimage.loop.LoopCallbackInterface;
+import de.gameplayjdk.jwfcimage.utility.Velocity;
 
 public class ImageLogic implements LoopCallbackInterface {
 
     private final ImageDataInterface imageData;
+    private final Velocity velocity;
 
     private final ImageScreen screen;
 
-    // TODO: Implement real logic.
-    private double n;
+    private final TileMap tileMap;
 
-    public ImageLogic(ImageDataInterface imageData) {
+    private double accumulator;
+
+    public ImageLogic(ImageDataInterface imageData, Velocity velocity) {
         this.imageData = imageData;
+        this.velocity = velocity;
 
         this.screen = new ImageScreen(this.imageData.getWidth(), this.imageData.getHeight());
+        // TODO: Use constant.
+        this.tileMap = new TileMap(16, 16);
 
-        // TODO: Implement real logic.
-        this.n = 0.0D;
+        this.accumulator = 0.0D;
     }
 
     @Override
     public void update(double deltaTime) {
-        // TODO: Implement real logic.
-        this.n += 0.0001D;
+        this.tileMap.update(deltaTime);
+
+        this.accumulator += deltaTime;
+
+        if (this.accumulator >= 10.0D) {
+            this.tileMap.generate();
+
+            this.accumulator = 0.0D;
+        }
     }
 
     @Override
     public void render() {
         this.screen.clear();
 
-        // TODO: Implement real logic.
-        this.screen.drawPixel(10, 10, 0xFFFFFF);
-        this.screen.drawRectangle((int) this.n, 50, 100, 20, 0xFF00FF);
-        this.screen.drawRectangleOutline((int) this.n, 100, 100, 75, 10, 0x00FFFF);
+        this.tileMap.render(this.screen, (int) this.velocity.getX(), (int) this.velocity.getY());
 
         // Copy screen content to the data returned by getData().
         this.screen.show(
-                this.imageData.getData()
+                this.imageData
         );
     }
 }

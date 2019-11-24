@@ -16,27 +16,24 @@
  * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package de.gameplayjdk.jwfcimage.image;
+package de.gameplayjdk.jwfcimage.engine.data;
 
-import java.util.Arrays;
+import de.gameplayjdk.jwfc.api.TileInterface;
+import de.gameplayjdk.jwfc.api.TileMapAdapter;
 
-public interface ImageDataInterface {
+public class TileMapTileAdapter implements TileMapAdapter.TileAdapter<Integer> {
 
-    /**
-     * @return The image data width.
-     */
-    public int getWidth();
+    public TileMapTileAdapter() {
 
-    /**
-     * @return The image data height.
-     */
-    public int getHeight();
+    }
 
-    /**
-     * Return the image data array. Use {@link Arrays#copyOf(int[], int)} to prevent direct access to the
-     * data via this getter.
-     *
-     * @return The image data array.
-     */
-    public int[] getData();
+    @Override
+    public TileInterface[] toTileMap(Integer[] tileMap) {
+        return new TileInterface[0];
+    }
+
+    @Override
+    public Integer[] fromTileMap(TileInterface[] tileMap) {
+        return new Integer[0];
+    }
 }

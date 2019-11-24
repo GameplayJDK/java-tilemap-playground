@@ -18,12 +18,13 @@
 
 package de.gameplayjdk.jwfcimage;
 
-import de.gameplayjdk.jwfcimage.image.ImageDataInterface;
 import de.gameplayjdk.jwfcimage.swing.JCanvas;
+import de.gameplayjdk.jwfcimage.utility.Velocity;
 
 import javax.swing.*;
 import javax.swing.filechooser.FileFilter;
 import java.awt.*;
+import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
@@ -31,16 +32,19 @@ import java.io.File;
 
 public class MainView extends JFrame implements MainContractInterface.View {
 
-    private WindowListener windowListener;
+    private MainView.WindowListener windowListener;
+    private MainView.KeyListener keyListener;
 
     private MainContractInterface.Presenter presenter;
 
-    private ImageDataInterface imageData;
+    private JCanvas canvas;
+    private Velocity offset;
 
     public MainView() throws HeadlessException {
         super();
 
-        this.windowListener = new WindowListener(this);
+        this.windowListener = new MainView.WindowListener(this);
+        this.keyListener = new MainView.KeyListener(this);
 
         this.initialize();
     }
@@ -55,13 +59,18 @@ public class MainView extends JFrame implements MainContractInterface.View {
         JCanvas canvas = new JCanvas(Main.WINDOW_WIDTH, Main.WINDOW_HEIGHT);
         this.add(canvas);
 
-        this.imageData = canvas;
+        this.canvas = canvas;
+        this.offset = new Velocity();
 
         this.setResizable(false);
         this.pack();
         this.setLocationRelativeTo(null);
 
         this.addWindowListener(this.windowListener);
+
+        canvas.addKeyListener(this.keyListener);
+        canvas.setFocusable(true);
+        canvas.setFocusTraversalKeysEnabled(false);
     }
 
     private JMenuBar createMenuBar() {
@@ -118,10 +127,12 @@ public class MainView extends JFrame implements MainContractInterface.View {
     public void openView() {
         this.windowListener.setUserCommand(true);
 
-        this.presenter.setImageData(this.imageData);
+        this.presenter.setImageData(this.canvas, this.offset);
         this.presenter.start();
 
         this.setVisible(true);
+
+        this.canvas.requestFocus();
     }
 
     @Override
@@ -158,6 +169,11 @@ public class MainView extends JFrame implements MainContractInterface.View {
         JOptionPane.showMessageDialog(this, "java-wfc-image by GameplayJDK", "About", JOptionPane.INFORMATION_MESSAGE);
     }
 
+    @Override
+    public void moveOffset(Velocity velocity) {
+        this.offset.combine(velocity);
+    }
+
     public static class WindowListener extends WindowAdapter {
 
         private boolean userCommand;
@@ -187,6 +203,57 @@ public class MainView extends JFrame implements MainContractInterface.View {
 
         public void setUserCommand(boolean userCommand) {
             this.userCommand = userCommand;
+        }
+    }
+
+    public static class KeyListener extends KeyAdapter {
+
+        private final Velocity velocity;
+
+        private final MainContractInterface.View view;
+
+        public KeyListener(MainContractInterface.View view) {
+            super();
+
+            this.velocity = new Velocity();
+
+            this.view = view;
+        }
+
+        @Override
+        public void keyPressed(KeyEvent event) {
+            super.keyPressed(event);
+
+            this.velocity.reset();
+
+            switch (event.getKeyCode()) {
+                case KeyEvent.VK_LEFT:
+                    this.velocity.setX(+1.0D);
+
+                    //System.out.println("VK_LEFT");
+
+                    break;
+                case KeyEvent.VK_DOWN:
+                    this.velocity.setY(-1.0D);
+
+                    //System.out.println("VK_DOWN");
+
+                    break;
+                case KeyEvent.VK_RIGHT:
+                    this.velocity.setX(-1.0D);
+
+                    //System.out.println("VK_RIGHT");
+
+                    break;
+                case KeyEvent.VK_UP:
+                    this.velocity.setY(+1.0D);
+
+                    //System.out.println("VK_UP");
+
+                    break;
+            }
+
+            this.view.moveOffset(this.velocity);
         }
     }
 

@@ -22,6 +22,7 @@ import de.gameplayjdk.jwfcimage.image.ImageDataInterface;
 import de.gameplayjdk.jwfcimage.image.ImageLogic;
 import de.gameplayjdk.jwfcimage.loop.Loop;
 import de.gameplayjdk.jwfcimage.loop.LoopCallbackAdapter;
+import de.gameplayjdk.jwfcimage.utility.Velocity;
 
 import java.io.File;
 
@@ -61,8 +62,8 @@ public class MainPresenter implements MainContractInterface.Presenter {
     }
 
     @Override
-    public void setImageData(ImageDataInterface imageData) {
-        ImageLogic imageLogic = new ImageLogic(imageData);
+    public void setImageData(ImageDataInterface imageData, Velocity velocity) {
+        ImageLogic imageLogic = new ImageLogic(imageData, velocity);
 
         this.callbackAdapter.setCallback(imageLogic);
     }
@@ -70,6 +71,7 @@ public class MainPresenter implements MainContractInterface.Presenter {
     @Override
     public void openImage(File file) {
         // TODO: Implement.
+
         System.out.println("Not yet supported.");
     }
 }
