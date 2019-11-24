@@ -16,6 +16,7 @@
  * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
+// TODO: Refactor.
 package de.gameplayjdk.jwfcimage.image;
 
 import de.gameplayjdk.jwfcimage.engine.data.TileMap;
@@ -25,17 +26,18 @@ import de.gameplayjdk.jwfcimage.utility.Velocity;
 public class ImageLogic implements LoopCallbackInterface {
 
     private final ImageDataInterface imageData;
-    private final Velocity velocity;
+    private final Velocity offset;
 
     private final ImageScreen screen;
 
+    // TODO: Move out of here.
     private final TileMap tileMap;
 
     private double accumulator;
 
-    public ImageLogic(ImageDataInterface imageData, Velocity velocity) {
+    public ImageLogic(ImageDataInterface imageData) {
         this.imageData = imageData;
-        this.velocity = velocity;
+        this.offset = new Velocity();
 
         this.screen = new ImageScreen(this.imageData.getWidth(), this.imageData.getHeight());
         // TODO: Use constant.
@@ -48,6 +50,8 @@ public class ImageLogic implements LoopCallbackInterface {
     public void update(double deltaTime) {
         this.tileMap.update(deltaTime);
 
+        // TODO: Fix loop and make this this accumulator accurate, when delta time is really the time.
+        //  Also, allow access to the tilemap generate() method (with parameters) from the menu bar.
         this.accumulator += deltaTime;
 
         if (this.accumulator >= 10.0D) {
@@ -61,11 +65,15 @@ public class ImageLogic implements LoopCallbackInterface {
     public void render() {
         this.screen.clear();
 
-        this.tileMap.render(this.screen, (int) this.velocity.getX(), (int) this.velocity.getY());
+        this.tileMap.render(this.screen, (int) this.offset.getX(), (int) this.offset.getY());
 
         // Copy screen content to the data returned by getData().
         this.screen.show(
                 this.imageData
         );
+    }
+
+    public void moveOffset(Velocity velocity) {
+        this.offset.combine(velocity);
     }
 }

@@ -50,8 +50,10 @@ public interface MainContractInterface {
 
         public void stop();
 
-        public void setImageData(ImageDataInterface imageData, Velocity velocity);
+        public void setImageData(ImageDataInterface imageData);
 
         public void openImage(File file);
+
+        public void moveOffset(Velocity velocity);
     }
 }

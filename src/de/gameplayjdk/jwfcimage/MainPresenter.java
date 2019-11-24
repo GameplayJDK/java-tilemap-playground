@@ -34,6 +34,8 @@ public class MainPresenter implements MainContractInterface.Presenter {
 
     private final Loop loop;
 
+    private ImageLogic imageLogic;
+
     public MainPresenter(MainContractInterface.View view) {
         this.view = view;
         this.view.setPresenter(this);
@@ -41,6 +43,8 @@ public class MainPresenter implements MainContractInterface.Presenter {
         this.callbackAdapter = new LoopCallbackAdapter();
 
         this.loop = new Loop(this.callbackAdapter);
+
+        this.imageLogic = null;
     }
 
     @Override
@@ -62,8 +66,8 @@ public class MainPresenter implements MainContractInterface.Presenter {
     }
 
     @Override
-    public void setImageData(ImageDataInterface imageData, Velocity velocity) {
-        ImageLogic imageLogic = new ImageLogic(imageData, velocity);
+    public void setImageData(ImageDataInterface imageData) {
+        this.imageLogic = new ImageLogic(imageData);
 
         this.callbackAdapter.setCallback(imageLogic);
     }
@@ -73,5 +77,10 @@ public class MainPresenter implements MainContractInterface.Presenter {
         // TODO: Implement.
 
         System.out.println("Not yet supported.");
+    }
+
+    @Override
+    public void moveOffset(Velocity velocity) {
+        this.imageLogic.moveOffset(velocity);
     }
 }

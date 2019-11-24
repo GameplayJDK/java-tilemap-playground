@@ -24,27 +24,25 @@ import de.gameplayjdk.jwfcimage.utility.Velocity;
 import javax.swing.*;
 import javax.swing.filechooser.FileFilter;
 import java.awt.*;
-import java.awt.event.KeyAdapter;
-import java.awt.event.KeyEvent;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
+import java.awt.event.*;
 import java.io.File;
 
 public class MainView extends JFrame implements MainContractInterface.View {
 
     private MainView.WindowListener windowListener;
     private MainView.KeyListener keyListener;
+    private MainView.MouseListener mouseListener;
 
     private MainContractInterface.Presenter presenter;
 
     private JCanvas canvas;
-    private Velocity offset;
 
     public MainView() throws HeadlessException {
         super();
 
         this.windowListener = new MainView.WindowListener(this);
         this.keyListener = new MainView.KeyListener(this);
+        this.mouseListener = new MainView.MouseListener(this);
 
         this.initialize();
     }
@@ -60,7 +58,6 @@ public class MainView extends JFrame implements MainContractInterface.View {
         this.add(canvas);
 
         this.canvas = canvas;
-        this.offset = new Velocity();
 
         this.setResizable(false);
         this.pack();
@@ -68,9 +65,11 @@ public class MainView extends JFrame implements MainContractInterface.View {
 
         this.addWindowListener(this.windowListener);
 
-        canvas.addKeyListener(this.keyListener);
-        canvas.setFocusable(true);
-        canvas.setFocusTraversalKeysEnabled(false);
+        this.canvas.addKeyListener(this.keyListener);
+        this.canvas.addMouseListener(this.mouseListener);
+
+        this.canvas.setFocusable(true);
+        this.canvas.setFocusTraversalKeysEnabled(false);
     }
 
     private JMenuBar createMenuBar() {
@@ -127,7 +126,7 @@ public class MainView extends JFrame implements MainContractInterface.View {
     public void openView() {
         this.windowListener.setUserCommand(true);
 
-        this.presenter.setImageData(this.canvas, this.offset);
+        this.presenter.setImageData(this.canvas);
         this.presenter.start();
 
         this.setVisible(true);
@@ -171,7 +170,7 @@ public class MainView extends JFrame implements MainContractInterface.View {
 
     @Override
     public void moveOffset(Velocity velocity) {
-        this.offset.combine(velocity);
+        this.presenter.moveOffset(velocity);
     }
 
     public static class WindowListener extends WindowAdapter {
@@ -257,9 +256,22 @@ public class MainView extends JFrame implements MainContractInterface.View {
         }
     }
 
+    public static class MouseListener extends MouseAdapter {
+
+        private final MainContractInterface.View view;
+
+        public MouseListener(MainContractInterface.View view) {
+            super();
+
+            this.view = view;
+        }
+
+        // TODO: Implement mouse input.
+    }
+
     public static class FileFilterImage extends FileFilter {
 
-        //        private static final String EXTENSION_JPEG = "jpeg";
+//        private static final String EXTENSION_JPEG = "jpeg";
 //        private static final String EXTENSION_JPG = "jpg";
 //        private static final String EXTENSION_GIF = "gif";
 //        private static final String EXTENSION_TIFF = "tiff";

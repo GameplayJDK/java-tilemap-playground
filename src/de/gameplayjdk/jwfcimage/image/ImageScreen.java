@@ -147,8 +147,6 @@ public class ImageScreen implements ImageDataInterface {
                     continue;
                 }
 
-                //System.out.println(((y + h) * this.width) + (x + w));
-
                 this.data[((y + h) * this.width) + (x + w)] = data[(h * width) + w];
             }
         }
