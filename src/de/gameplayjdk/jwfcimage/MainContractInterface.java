@@ -21,7 +21,7 @@ package de.gameplayjdk.jwfcimage;
 import de.gameplayjdk.jwfcimage.image.ImageDataInterface;
 import de.gameplayjdk.jwfcimage.mvp.PresenterInterface;
 import de.gameplayjdk.jwfcimage.mvp.ViewInterface;
-import de.gameplayjdk.jwfcimage.utility.Velocity;
+import de.gameplayjdk.jwfcimage.utility.Vector;
 
 import java.io.File;
 
@@ -40,7 +40,9 @@ public interface MainContractInterface {
 
         public void showAboutDialog();
 
-        public void moveOffset(Velocity velocity);
+        public void moveOffset(Vector vector);
+
+        public void moveVector(Vector vector);
     }
 
     public static interface Presenter extends PresenterInterface {
@@ -54,6 +56,8 @@ public interface MainContractInterface {
 
         public void openImage(File file);
 
-        public void moveOffset(Velocity velocity);
+        public void moveOffset(Vector vector);
+
+        public void moveVector(Vector vector);
     }
 }

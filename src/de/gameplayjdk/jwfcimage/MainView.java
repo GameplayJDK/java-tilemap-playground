@@ -19,7 +19,7 @@
 package de.gameplayjdk.jwfcimage;
 
 import de.gameplayjdk.jwfcimage.swing.JCanvas;
-import de.gameplayjdk.jwfcimage.utility.Velocity;
+import de.gameplayjdk.jwfcimage.utility.Vector;
 
 import javax.swing.*;
 import javax.swing.filechooser.FileFilter;
@@ -66,7 +66,10 @@ public class MainView extends JFrame implements MainContractInterface.View {
         this.addWindowListener(this.windowListener);
 
         this.canvas.addKeyListener(this.keyListener);
+
         this.canvas.addMouseListener(this.mouseListener);
+        this.canvas.addMouseMotionListener(this.mouseListener);
+        this.canvas.addMouseWheelListener(this.mouseListener);
 
         this.canvas.setFocusable(true);
         this.canvas.setFocusTraversalKeysEnabled(false);
@@ -169,8 +172,13 @@ public class MainView extends JFrame implements MainContractInterface.View {
     }
 
     @Override
-    public void moveOffset(Velocity velocity) {
-        this.presenter.moveOffset(velocity);
+    public void moveOffset(Vector vector) {
+        this.presenter.moveOffset(vector);
+    }
+
+    @Override
+    public void moveVector(Vector vector) {
+        this.presenter.moveVector(vector);
     }
 
     public static class WindowListener extends WindowAdapter {
@@ -207,14 +215,14 @@ public class MainView extends JFrame implements MainContractInterface.View {
 
     public static class KeyListener extends KeyAdapter {
 
-        private final Velocity velocity;
+        private final Vector vector;
 
         private final MainContractInterface.View view;
 
         public KeyListener(MainContractInterface.View view) {
             super();
 
-            this.velocity = new Velocity();
+            this.vector = new Vector();
 
             this.view = view;
         }
@@ -223,55 +231,112 @@ public class MainView extends JFrame implements MainContractInterface.View {
         public void keyPressed(KeyEvent event) {
             super.keyPressed(event);
 
-            this.velocity.reset();
-
             switch (event.getKeyCode()) {
                 case KeyEvent.VK_LEFT:
-                    this.velocity.setX(+1.0D);
+                    this.vector.setX(+1.0D);
 
                     //System.out.println("VK_LEFT");
 
                     break;
                 case KeyEvent.VK_DOWN:
-                    this.velocity.setY(-1.0D);
+                    this.vector.setY(-1.0D);
 
                     //System.out.println("VK_DOWN");
 
                     break;
                 case KeyEvent.VK_RIGHT:
-                    this.velocity.setX(-1.0D);
+                    this.vector.setX(-1.0D);
 
                     //System.out.println("VK_RIGHT");
 
                     break;
                 case KeyEvent.VK_UP:
-                    this.velocity.setY(+1.0D);
+                    this.vector.setY(+1.0D);
 
                     //System.out.println("VK_UP");
 
                     break;
             }
 
-            this.view.moveOffset(this.velocity);
+            this.view.moveVector(this.vector);
+        }
+
+        @Override
+        public void keyReleased(KeyEvent event) {
+            super.keyReleased(event);
+
+            switch (event.getKeyCode()) {
+                case KeyEvent.VK_LEFT:
+                case KeyEvent.VK_RIGHT:
+                    this.vector.setX(0.0D);
+
+                    //System.out.println("VK_LEFT");
+                    //System.out.println("VK_RIGHT");
+
+                    break;
+                case KeyEvent.VK_DOWN:
+                case KeyEvent.VK_UP:
+                    this.vector.setY(0.0D);
+
+                    //System.out.println("VK_DOWN");
+                    //System.out.println("VK_UP");
+
+                    break;
+            }
+
+            this.view.moveVector(this.vector);
         }
     }
 
     public static class MouseListener extends MouseAdapter {
+
+        private final Vector vector;
+        private final Vector origin;
 
         private final MainContractInterface.View view;
 
         public MouseListener(MainContractInterface.View view) {
             super();
 
+            this.vector = new Vector();
+            this.origin = new Vector();
+
             this.view = view;
         }
 
-        // TODO: Implement mouse input.
+        @Override
+        public void mousePressed(MouseEvent event) {
+            super.mousePressed(event);
+
+            this.origin.set(event.getX(), event.getY());
+        }
+
+        @Override
+        public void mouseReleased(MouseEvent event) {
+            super.mouseReleased(event);
+
+            this.origin.reset();
+        }
+
+        @Override
+        public void mouseDragged(MouseEvent event) {
+            super.mouseDragged(event);
+
+            if ((event.getModifiers() & InputEvent.BUTTON1_MASK) == InputEvent.BUTTON1_MASK) {
+                this.vector.set(event.getX(), event.getY());
+                this.vector.combine(-1 * this.origin.getX(), -1 * this.origin.getY());
+
+                this.view.moveOffset(this.vector);
+
+                this.origin.combine(this.vector);
+                this.vector.reset();
+            }
+        }
     }
 
     public static class FileFilterImage extends FileFilter {
 
-//        private static final String EXTENSION_JPEG = "jpeg";
+        //        private static final String EXTENSION_JPEG = "jpeg";
 //        private static final String EXTENSION_JPG = "jpg";
 //        private static final String EXTENSION_GIF = "gif";
 //        private static final String EXTENSION_TIFF = "tiff";

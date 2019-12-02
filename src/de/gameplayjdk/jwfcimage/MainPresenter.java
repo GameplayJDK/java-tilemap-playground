@@ -22,7 +22,7 @@ import de.gameplayjdk.jwfcimage.image.ImageDataInterface;
 import de.gameplayjdk.jwfcimage.image.ImageLogic;
 import de.gameplayjdk.jwfcimage.loop.Loop;
 import de.gameplayjdk.jwfcimage.loop.LoopCallbackAdapter;
-import de.gameplayjdk.jwfcimage.utility.Velocity;
+import de.gameplayjdk.jwfcimage.utility.Vector;
 
 import java.io.File;
 
@@ -80,7 +80,12 @@ public class MainPresenter implements MainContractInterface.Presenter {
     }
 
     @Override
-    public void moveOffset(Velocity velocity) {
-        this.imageLogic.moveOffset(velocity);
+    public void moveOffset(Vector vector) {
+        this.imageLogic.moveOffset(vector);
+    }
+
+    @Override
+    public void moveVector(Vector vector) {
+        this.imageLogic.moveVector(vector);
     }
 }

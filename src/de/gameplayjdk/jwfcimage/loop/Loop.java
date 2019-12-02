@@ -20,6 +20,9 @@ package de.gameplayjdk.jwfcimage.loop;
 
 public class Loop extends Thread {
 
+    private static final int TARGET_TPS = 60;
+    private static final int SKIP_LIMIT = 5;
+
     private boolean active;
 
     private final LoopCallbackInterface callback;
@@ -34,9 +37,30 @@ public class Loop extends Thread {
 
     @Override
     public void run() {
-        // TODO: Improve loop using https://dewitters.com/dewitters-gameloop/.
+        long timeNow = 0L;
+        long timeLast = System.currentTimeMillis();
+
+        final double time = (1.0D / Loop.TARGET_TPS) * 1000;
+        double delta = 0.0D;
+
+        int skip = 0;
+
         while (this.active) {
-            this.callback.update(1.0D);
+            timeNow = System.currentTimeMillis();
+
+            delta += (timeNow - timeLast) / time;
+            timeLast = timeNow;
+
+            skip = 0;
+            while (delta >= 1.0D && skip < Loop.SKIP_LIMIT) {
+                this.callback.update(delta);
+
+                delta--;
+
+                skip++;
+                System.out.println(skip);
+            }
+            System.out.println();
 
             this.callback.render();
         }

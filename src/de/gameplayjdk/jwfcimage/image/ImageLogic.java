@@ -21,12 +21,13 @@ package de.gameplayjdk.jwfcimage.image;
 
 import de.gameplayjdk.jwfcimage.engine.data.TileMap;
 import de.gameplayjdk.jwfcimage.loop.LoopCallbackInterface;
-import de.gameplayjdk.jwfcimage.utility.Velocity;
+import de.gameplayjdk.jwfcimage.utility.Vector;
 
 public class ImageLogic implements LoopCallbackInterface {
 
     private final ImageDataInterface imageData;
-    private final Velocity offset;
+    private final Vector vector;
+    private final Vector offset;
 
     private final ImageScreen screen;
 
@@ -37,7 +38,8 @@ public class ImageLogic implements LoopCallbackInterface {
 
     public ImageLogic(ImageDataInterface imageData) {
         this.imageData = imageData;
-        this.offset = new Velocity();
+        this.vector = new Vector();
+        this.offset = new Vector();
 
         this.screen = new ImageScreen(this.imageData.getWidth(), this.imageData.getHeight());
         // TODO: Use constant.
@@ -50,15 +52,14 @@ public class ImageLogic implements LoopCallbackInterface {
     public void update(double deltaTime) {
         this.tileMap.update(deltaTime);
 
-        // TODO: Fix loop and make this this accumulator accurate, when delta time is really the time.
-        //  Also, allow access to the tilemap generate() method (with parameters) from the menu bar.
         this.accumulator += deltaTime;
-
-        if (this.accumulator >= 10.0D) {
+        if (this.accumulator >= 60.0D) {
             this.tileMap.generate();
 
             this.accumulator = 0.0D;
         }
+
+        this.offset.combine(this.vector);
     }
 
     @Override
@@ -73,7 +74,13 @@ public class ImageLogic implements LoopCallbackInterface {
         );
     }
 
-    public void moveOffset(Velocity velocity) {
-        this.offset.combine(velocity);
+    public void moveOffset(Vector vector) {
+        this.offset.combine(vector);
+    }
+
+    public void moveVector(Vector vector) {
+        vector.normalize();
+
+        this.vector.set(vector);
     }
 }

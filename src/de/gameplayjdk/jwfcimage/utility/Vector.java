@@ -18,25 +18,25 @@
 
 package de.gameplayjdk.jwfcimage.utility;
 
-public class Velocity {
+public class Vector {
 
     private double x;
     private double y;
 
-    public Velocity() {
+    public Vector() {
         this(0.0D, 0.0D);
     }
 
-    public Velocity(double x, double y) {
+    public Vector(double x, double y) {
         this.set(x, y);
     }
 
-    public Velocity(Velocity velocity) {
-        this.set(velocity);
+    public Vector(Vector vector) {
+        this.set(vector);
     }
 
-    public void set(Velocity velocity) {
-        this.set(velocity.getX(), velocity.getY());
+    public void set(Vector vector) {
+        this.set(vector.getX(), vector.getY());
     }
 
     public void set(double x, double y) {
@@ -44,8 +44,8 @@ public class Velocity {
         this.y = y;
     }
 
-    public void combine(Velocity velocity) {
-        this.set(this.x + velocity.getX(), this.y + velocity.getY());
+    public void combine(Vector vector) {
+        this.set(this.x + vector.getX(), this.y + vector.getY());
     }
 
     public void combine(double x, double y) {
@@ -72,8 +72,15 @@ public class Velocity {
         this.set(0.0D, 0.0D);
     }
 
+    public void normalize() {
+        double x = Math.signum(this.x);
+        double y = Math.signum(this.y);
+
+        this.set(x, y);
+    }
+
     @Override
     public String toString() {
-        return String.format("Velocity[x = %1$.2f, y = %2$.2f]", this.x, this.y);
+        return String.format("%1$s[x = %2$.2f, y = %3$.2f]", this.getClass().getName(), this.x, this.y);
     }
 }

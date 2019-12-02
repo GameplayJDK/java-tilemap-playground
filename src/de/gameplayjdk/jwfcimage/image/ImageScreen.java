@@ -30,8 +30,6 @@ public class ImageScreen implements ImageDataInterface {
 
     private final int[] data;
 
-    // TODO: Implement offset.
-
     public ImageScreen(int width, int height) {
         this.width = width;
         this.height = height;
