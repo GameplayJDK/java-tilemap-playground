@@ -16,59 +16,40 @@
  * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package de.gameplayjdk.jwfcimage.loop;
+package de.gameplayjdk.jwfcimage.engine.data;
 
-public class Loop extends Thread {
+import de.gameplayjdk.jwfcimage.engine.EngineObjectInterface;
+import de.gameplayjdk.jwfcimage.image.ImageScreen;
 
-    private static final int TARGET_TPS = 60;
-    private static final int SKIP_LIMIT = 5;
+public abstract class TileMapAbstract implements EngineObjectInterface {
 
-    private boolean active;
+    protected final int width;
+    protected final int height;
 
-    private final LoopCallbackInterface callback;
+    protected final int tileSize;
 
-    public Loop(LoopCallbackInterface callback) {
-        super("Loop");
+    public TileMapAbstract(int width, int height, int tileSize) {
+        this.width = width;
+        this.height = height;
 
-        this.active = false;
-
-        this.callback = callback;
+        this.tileSize = tileSize;
     }
 
     @Override
-    public void run() {
-        long timeNow = 0L;
-        long timeLast = System.currentTimeMillis();
+    public abstract void update(double deltaTime);
 
-        final double time = (1.0D / Loop.TARGET_TPS) * 1000;
-        double delta = 0.0D;
+    @Override
+    public abstract void render(ImageScreen screen, int x, int y);
 
-        int skip = 0;
-
-        while (this.active) {
-            timeNow = System.currentTimeMillis();
-
-            delta += (timeNow - timeLast) / time;
-            timeLast = timeNow;
-
-            skip = 0;
-            while (delta >= 1.0D && skip < Loop.SKIP_LIMIT) {
-                this.callback.update(delta);
-
-                delta--;
-
-                skip++;
-            }
-
-            this.callback.render();
-        }
+    public int getWidth() {
+        return this.width;
     }
 
-    public boolean isActive() {
-        return this.active;
+    public int getHeight() {
+        return this.height;
     }
 
-    public void setActive(boolean active) {
-        this.active = active;
+    public int getTileSize() {
+        return this.tileSize;
     }
 }

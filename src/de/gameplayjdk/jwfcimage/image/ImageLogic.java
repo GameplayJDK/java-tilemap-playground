@@ -31,8 +31,7 @@ public class ImageLogic implements LoopCallbackInterface {
 
     private final ImageScreen screen;
 
-    // TODO: Move out of here.
-    private final TileMap tileMap;
+    private TileMap tileMap;
 
     private double accumulator;
 
@@ -42,8 +41,8 @@ public class ImageLogic implements LoopCallbackInterface {
         this.offset = new Vector();
 
         this.screen = new ImageScreen(this.imageData.getWidth(), this.imageData.getHeight());
-        // TODO: Use constant.
-        this.tileMap = new TileMap(16, 16);
+
+        this.tileMap = new TileMap(16, 16, TileMap.TILE_SIZE);
 
         this.accumulator = 0.0D;
     }
@@ -82,5 +81,13 @@ public class ImageLogic implements LoopCallbackInterface {
         vector.normalize();
 
         this.vector.set(vector);
+    }
+
+    public TileMap getTileMap() {
+        return this.tileMap;
+    }
+
+    public void setTileMap(TileMap tileMap) {
+        this.tileMap = tileMap;
     }
 }

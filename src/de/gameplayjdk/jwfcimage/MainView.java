@@ -19,6 +19,8 @@
 package de.gameplayjdk.jwfcimage;
 
 import de.gameplayjdk.jwfcimage.swing.JCanvas;
+import de.gameplayjdk.jwfcimage.swing.JStatusBar;
+import de.gameplayjdk.jwfcimage.utility.Extension;
 import de.gameplayjdk.jwfcimage.utility.Vector;
 
 import javax.swing.*;
@@ -36,6 +38,7 @@ public class MainView extends JFrame implements MainContractInterface.View {
     private MainContractInterface.Presenter presenter;
 
     private JCanvas canvas;
+    private JStatusBar statusBar;
 
     public MainView() throws HeadlessException {
         super();
@@ -48,6 +51,8 @@ public class MainView extends JFrame implements MainContractInterface.View {
     }
 
     private void initialize() {
+        // Layout is BorderLayout by default.
+
         this.setTitle(Main.WINDOW_TITLE);
         this.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
 
@@ -55,9 +60,14 @@ public class MainView extends JFrame implements MainContractInterface.View {
         this.setJMenuBar(menuBar);
 
         JCanvas canvas = new JCanvas(Main.WINDOW_WIDTH, Main.WINDOW_HEIGHT);
-        this.add(canvas);
+        this.add(canvas, BorderLayout.CENTER);
 
         this.canvas = canvas;
+
+        JStatusBar statusBar = new JStatusBar(Main.WINDOW_WIDTH, Main.WINDOW_HEIGHT_BAR);
+        this.add(statusBar, BorderLayout.SOUTH);
+
+        this.statusBar = statusBar;
 
         this.setResizable(false);
         this.pack();
@@ -96,9 +106,36 @@ public class MainView extends JFrame implements MainContractInterface.View {
             menu.setMnemonic(KeyEvent.VK_M);
 
             {
-                JMenuItem menuItem = new JMenuItem("Load image...", KeyEvent.VK_I);
-                menuItem.addActionListener(event -> this.showOpenImageDialog());
+                // TODO: Implement handler entity data. Use the action class and setAction() method.
+
+                JMenuItem menuItem = new JMenuItem("Load file...", KeyEvent.VK_I);
+                menuItem.addActionListener(event -> this.showLoadFileDialog(-1));
                 menu.add(menuItem);
+            }
+
+            {
+                // TODO: Implement handler entity data. Use the action class and setAction() method.
+
+                JMenuItem menuItem = new JMenuItem("Save file...", KeyEvent.VK_E);
+                menuItem.addActionListener(event -> this.showLoadFileDialog(-1));
+                menu.add(menuItem);
+            }
+
+            menu.addSeparator();
+
+            {
+                // TODO: Implement map entity data. Use the action class and setAction() method.
+
+                JMenu menuSub = new JMenu("Switch...");
+                menuSub.setMnemonic(KeyEvent.VK_S);
+
+                {
+                    JMenuItem menuItem = new JMenuItem("Map #1", KeyEvent.VK_1);
+                    //menuItem.addActionListener(event -> ...);
+                    menuSub.add(menuItem);
+                }
+
+                menu.add(menuSub);
             }
 
             menuBar.add(menu);
@@ -148,7 +185,7 @@ public class MainView extends JFrame implements MainContractInterface.View {
     }
 
     @Override
-    public void showOpenImageDialog() {
+    public void showLoadFileDialog(int handlerId) {
         final JFileChooser fileChooser = new JFileChooser();
         fileChooser.setMultiSelectionEnabled(false);
         fileChooser.setAcceptAllFileFilterUsed(false);
@@ -162,13 +199,23 @@ public class MainView extends JFrame implements MainContractInterface.View {
         if (JFileChooser.APPROVE_OPTION == state) {
             File file = fileChooser.getSelectedFile();
 
-            this.presenter.openImage(file);
+            this.presenter.loadFile(file, handlerId);
         }
+    }
+
+    @Override
+    public void showSaveFileDialog(int handlerId) {
+        // TODO: Implement.
     }
 
     @Override
     public void showAboutDialog() {
         JOptionPane.showMessageDialog(this, "java-wfc-image by GameplayJDK", "About", JOptionPane.INFORMATION_MESSAGE);
+    }
+
+    @Override
+    public void showMessage(String message) {
+        this.statusBar.setMessage(message);
     }
 
     @Override
@@ -308,6 +355,8 @@ public class MainView extends JFrame implements MainContractInterface.View {
         public void mousePressed(MouseEvent event) {
             super.mousePressed(event);
 
+            this.changeCursor(event.getSource(), true);
+
             this.origin.set(event.getX(), event.getY());
         }
 
@@ -315,7 +364,19 @@ public class MainView extends JFrame implements MainContractInterface.View {
         public void mouseReleased(MouseEvent event) {
             super.mouseReleased(event);
 
+            this.changeCursor(event.getSource(), false);
+
             this.origin.reset();
+        }
+
+        private void changeCursor(Object source, boolean moveActive) {
+            int type = moveActive
+                    ? Cursor.MOVE_CURSOR
+                    : Cursor.DEFAULT_CURSOR;
+
+            if (source instanceof JPanel) {
+                ((JPanel) source).setCursor(Cursor.getPredefinedCursor(type));
+            }
         }
 
         @Override
@@ -336,7 +397,8 @@ public class MainView extends JFrame implements MainContractInterface.View {
 
     public static class FileFilterImage extends FileFilter {
 
-        //        private static final String EXTENSION_JPEG = "jpeg";
+        // Extension:
+//        private static final String EXTENSION_JPEG = "jpeg";
 //        private static final String EXTENSION_JPG = "jpg";
 //        private static final String EXTENSION_GIF = "gif";
 //        private static final String EXTENSION_TIFF = "tiff";
@@ -352,7 +414,7 @@ public class MainView extends JFrame implements MainContractInterface.View {
                 return true;
             }
 
-            String extension = this.getExtension(file);
+            String extension = Extension.getExtension(file);
 
             if (null != extension) {
                 return extension.equals(MainView.FileFilterImage.EXTENSION_PNG);
@@ -364,20 +426,6 @@ public class MainView extends JFrame implements MainContractInterface.View {
         @Override
         public String getDescription() {
             return "." + MainView.FileFilterImage.EXTENSION_PNG;
-        }
-
-        private String getExtension(File file) {
-            String extension = null;
-            String fileName = file.getName();
-
-            int i = fileName.lastIndexOf('.');
-
-            if (i > 0 && i < fileName.length() - 1) {
-                extension = fileName.substring(i + 1)
-                        .toLowerCase();
-            }
-
-            return extension;
         }
     }
 }

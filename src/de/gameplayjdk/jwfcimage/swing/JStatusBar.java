@@ -18,18 +18,17 @@
 
 package de.gameplayjdk.jwfcimage.swing;
 
-import de.gameplayjdk.jwfcimage.image.ImageDataInterface;
-
 import javax.swing.*;
+import javax.swing.border.BevelBorder;
 import java.awt.*;
-import java.awt.image.BufferedImage;
-import java.awt.image.DataBufferInt;
 
-public class JCanvas extends JPanel implements ImageDataInterface {
+public class JStatusBar extends JPanel {
 
-    private final Image image;
+    // TODO: Make message disappear after some time. Use javax.swing.Timer for that.
 
-    public JCanvas(int width, int height) {
+    private JLabel label;
+
+    public JStatusBar(int width, int height) {
         super();
 
         Dimension dimension = new Dimension(width, height);
@@ -40,32 +39,27 @@ public class JCanvas extends JPanel implements ImageDataInterface {
         this.setMaximumSize(dimension);
 
         this.setBorder(
-                BorderFactory.createEmptyBorder()
+                BorderFactory.createBevelBorder(BevelBorder.LOWERED)
         );
 
-        this.image = new BufferedImage(this.getWidth(), this.getHeight(), BufferedImage.TYPE_INT_RGB);
+        this.initialize();
     }
 
-    @Override
-    public void repaint() {
-        super.repaint();
+    private void initialize() {
+        BoxLayout layout = new BoxLayout(this, BoxLayout.X_AXIS);
+        this.setLayout(layout);
+
+        Dimension dimension = new Dimension(8, 0);
+        Component component = Box.createRigidArea(dimension);
+        this.add(component);
+
+        JLabel label = new JLabel();
+        this.add(label);
+
+        this.label = label;
     }
 
-    @Override
-    protected void paintComponent(Graphics g) {
-        //super.paintComponent(g);
-
-        g.drawImage(this.image, 0, 0, this.getWidth(), this.getHeight(), this);
-
-        // Might not be the best idea, but currently this works.
-        this.repaint();
-    }
-
-    @Override
-    public int[] getData() {
-        return (
-                (DataBufferInt) ((BufferedImage) this.image).getRaster()
-                        .getDataBuffer()
-        ).getData();
+    public void setMessage(String message) {
+        this.label.setText(message);
     }
 }

@@ -16,24 +16,27 @@
  * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package de.gameplayjdk.jwfcimage.engine.data;
+package de.gameplayjdk.jwfcimage.data.entity;
 
-import de.gameplayjdk.jwfc.api.TileInterface;
-import de.gameplayjdk.jwfc.api.TileMapAdapter;
+import de.gameplayjdk.jwfcimage.engine.data.TileMapAbstract;
 
-public class TileMapTileAdapter implements TileMapAdapter.TileAdapter<Integer> {
+public class EntityTileMap extends EntityAbstract {
 
-    public TileMapTileAdapter() {
+    private TileMapAbstract tileMap;
 
+    public EntityTileMap(int id) {
+        super(id);
     }
 
-    @Override
-    public TileInterface[] toTileMap(Integer[] tileMap) {
-        return new TileInterface[0];
+    public TileMapAbstract getTileMap() {
+        return this.tileMap;
     }
 
-    @Override
-    public Integer[] fromTileMap(TileInterface[] tileMap) {
-        return new Integer[0];
+    public void setTileMap(TileMapAbstract tileMap) {
+        this.tileMap = tileMap;
+    }
+
+    public boolean hasTileMap() {
+        return null != this.tileMap;
     }
 }

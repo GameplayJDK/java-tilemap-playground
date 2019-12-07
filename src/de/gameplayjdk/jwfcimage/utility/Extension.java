@@ -16,59 +16,31 @@
  * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package de.gameplayjdk.jwfcimage.loop;
+package de.gameplayjdk.jwfcimage.utility;
 
-public class Loop extends Thread {
+import java.io.File;
 
-    private static final int TARGET_TPS = 60;
-    private static final int SKIP_LIMIT = 5;
+public final class Extension {
 
-    private boolean active;
-
-    private final LoopCallbackInterface callback;
-
-    public Loop(LoopCallbackInterface callback) {
-        super("Loop");
-
-        this.active = false;
-
-        this.callback = callback;
+    private Extension() {
     }
 
-    @Override
-    public void run() {
-        long timeNow = 0L;
-        long timeLast = System.currentTimeMillis();
+    public static String getExtension(String fileName) {
+        String extension = null;
 
-        final double time = (1.0D / Loop.TARGET_TPS) * 1000;
-        double delta = 0.0D;
+        int i = fileName.lastIndexOf('.');
 
-        int skip = 0;
-
-        while (this.active) {
-            timeNow = System.currentTimeMillis();
-
-            delta += (timeNow - timeLast) / time;
-            timeLast = timeNow;
-
-            skip = 0;
-            while (delta >= 1.0D && skip < Loop.SKIP_LIMIT) {
-                this.callback.update(delta);
-
-                delta--;
-
-                skip++;
-            }
-
-            this.callback.render();
+        if (i > 0 && i < fileName.length() - 1) {
+            extension = fileName.substring(i + 1)
+                    .toLowerCase();
         }
+
+        return extension;
     }
 
-    public boolean isActive() {
-        return this.active;
-    }
+    public static String getExtension(File file) {
+        String fileName = file.getName();
 
-    public void setActive(boolean active) {
-        this.active = active;
+        return Extension.getExtension(fileName);
     }
 }

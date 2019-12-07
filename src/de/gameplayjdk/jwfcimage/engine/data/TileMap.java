@@ -18,26 +18,21 @@
 
 package de.gameplayjdk.jwfcimage.engine.data;
 
-import de.gameplayjdk.jwfcimage.engine.EngineObjectInterface;
 import de.gameplayjdk.jwfcimage.image.ImageScreen;
 
 import java.util.Arrays;
 import java.util.Random;
 
-public class TileMap implements EngineObjectInterface {
+public class TileMap extends TileMapAbstract {
 
     public static final int TILE_SIZE = 16;
-
-    private final int width;
-    private final int height;
 
     private Tile[] map;
 
     private final Random random;
 
-    public TileMap(int width, int height) {
-        this.width = width;
-        this.height = height;
+    public TileMap(int width, int height, int tileSize) {
+        super(width, height, tileSize);
 
         this.map = new Tile[this.width * this.height];
 
@@ -53,7 +48,7 @@ public class TileMap implements EngineObjectInterface {
     }
 
     public void generate() {
-        // TODO: Generate tilemap using java-wfc library.
+        // TODO: Generate tilemap using java-wfc library. - Move the logic to an extension though.
 
         int index = this.random.nextInt(this.map.length);
 
@@ -97,16 +92,8 @@ public class TileMap implements EngineObjectInterface {
                     continue;
                 }
 
-                tile.render(screen, x + (w * TileMap.TILE_SIZE), y + (h * TileMap.TILE_SIZE));
+                tile.render(screen, x + (w * this.tileSize), y + (h * this.tileSize));
             }
         }
-    }
-
-    public int getWidth() {
-        return this.width;
-    }
-
-    public int getHeight() {
-        return this.height;
     }
 }

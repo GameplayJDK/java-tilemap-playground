@@ -16,28 +16,15 @@
  * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package de.gameplayjdk.jwfcimage;
+package de.gameplayjdk.jwfcimage.mvp.clean;
 
-import javax.swing.*;
+public interface UseCaseSchedulerInterface {
 
-public class Main {
+    public void execute(Runnable runnable);
 
-    public static final String WINDOW_TITLE = "java-wfc-image";
-    public static final int WINDOW_WIDTH = 800;
-    public static final int WINDOW_HEIGHT = (Main.WINDOW_WIDTH / 16) * 9;
+    public <V extends UseCase.ResponseValueInterface, W extends UseCase.ErrorResponseValueInterface> void notifyResponse(final V responseValue, final UseCase.UseCaseCallback<V, W> useCaseCallback);
 
-    public static final int WINDOW_HEIGHT_BAR = 16 + 8;
+    public <V extends UseCase.ResponseValueInterface, W extends UseCase.ErrorResponseValueInterface> void notifyError(final W errorResponseValue, final UseCase.UseCaseCallback<V, W> useCaseCallback);
 
-    public static void main(String[] args) {
-        try {
-            UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-        } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | UnsupportedLookAndFeelException ex) {
-            ex.printStackTrace();
-        }
-
-        MainContractInterface.View view = new MainView();
-        MainContractInterface.Presenter presenter = new MainPresenter(view);
-
-        view.openView();
-    }
+    public void shutdown();
 }

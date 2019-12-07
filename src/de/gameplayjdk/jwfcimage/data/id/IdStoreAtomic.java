@@ -16,28 +16,24 @@
  * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package de.gameplayjdk.jwfcimage;
+package de.gameplayjdk.jwfcimage.data.id;
 
-import javax.swing.*;
+import java.util.concurrent.atomic.AtomicInteger;
 
-public class Main {
+public class IdStoreAtomic implements IdStoreInterface {
 
-    public static final String WINDOW_TITLE = "java-wfc-image";
-    public static final int WINDOW_WIDTH = 800;
-    public static final int WINDOW_HEIGHT = (Main.WINDOW_WIDTH / 16) * 9;
+    private AtomicInteger id;
 
-    public static final int WINDOW_HEIGHT_BAR = 16 + 8;
+    public IdStoreAtomic() {
+        this(0);
+    }
 
-    public static void main(String[] args) {
-        try {
-            UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-        } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | UnsupportedLookAndFeelException ex) {
-            ex.printStackTrace();
-        }
+    public IdStoreAtomic(int id) {
+        this.id = new AtomicInteger(id);
+    }
 
-        MainContractInterface.View view = new MainView();
-        MainContractInterface.Presenter presenter = new MainPresenter(view);
-
-        view.openView();
+    @Override
+    public int increment() {
+        return this.id.incrementAndGet();
     }
 }

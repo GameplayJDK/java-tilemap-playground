@@ -36,9 +36,13 @@ public interface MainContractInterface {
 
         public void closeView();
 
-        public void showOpenImageDialog();
+        public void showLoadFileDialog(int handlerId);
+
+        public void showSaveFileDialog(int handlerId);
 
         public void showAboutDialog();
+
+        public void showMessage(String message);
 
         public void moveOffset(Vector vector);
 
@@ -54,7 +58,9 @@ public interface MainContractInterface {
 
         public void setImageData(ImageDataInterface imageData);
 
-        public void openImage(File file);
+        public void loadFile(File file, int handlerId);
+
+        public void saveFile(File file, int handlerId);
 
         public void moveOffset(Vector vector);
 

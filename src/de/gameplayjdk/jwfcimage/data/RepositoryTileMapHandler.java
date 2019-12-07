@@ -16,59 +16,28 @@
  * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package de.gameplayjdk.jwfcimage.loop;
+package de.gameplayjdk.jwfcimage.data;
 
-public class Loop extends Thread {
+import de.gameplayjdk.jwfcimage.data.entity.EntityTileMapHandler;
 
-    private static final int TARGET_TPS = 60;
-    private static final int SKIP_LIMIT = 5;
+public class RepositoryTileMapHandler extends RepositoryAbstract<EntityTileMapHandler> {
 
-    private boolean active;
+    private static RepositoryTileMapHandler instance;
 
-    private final LoopCallbackInterface callback;
+    public static RepositoryTileMapHandler getInstance() {
+        if (null == RepositoryTileMapHandler.instance) {
+            RepositoryTileMapHandler.instance = new RepositoryTileMapHandler();
+        }
 
-    public Loop(LoopCallbackInterface callback) {
-        super("Loop");
+        return RepositoryTileMapHandler.instance;
+    }
 
-        this.active = false;
-
-        this.callback = callback;
+    public RepositoryTileMapHandler() {
+        super();
     }
 
     @Override
-    public void run() {
-        long timeNow = 0L;
-        long timeLast = System.currentTimeMillis();
-
-        final double time = (1.0D / Loop.TARGET_TPS) * 1000;
-        double delta = 0.0D;
-
-        int skip = 0;
-
-        while (this.active) {
-            timeNow = System.currentTimeMillis();
-
-            delta += (timeNow - timeLast) / time;
-            timeLast = timeNow;
-
-            skip = 0;
-            while (delta >= 1.0D && skip < Loop.SKIP_LIMIT) {
-                this.callback.update(delta);
-
-                delta--;
-
-                skip++;
-            }
-
-            this.callback.render();
-        }
-    }
-
-    public boolean isActive() {
-        return this.active;
-    }
-
-    public void setActive(boolean active) {
-        this.active = active;
+    public EntityTileMapHandler create() {
+        return new EntityTileMapHandler(this.getNewId());
     }
 }

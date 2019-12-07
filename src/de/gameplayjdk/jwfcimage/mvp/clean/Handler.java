@@ -16,28 +16,18 @@
  * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package de.gameplayjdk.jwfcimage;
+package de.gameplayjdk.jwfcimage.mvp.clean;
 
-import javax.swing.*;
+import java.awt.*;
 
-public class Main {
+public final class Handler {
 
-    public static final String WINDOW_TITLE = "java-wfc-image";
-    public static final int WINDOW_WIDTH = 800;
-    public static final int WINDOW_HEIGHT = (Main.WINDOW_WIDTH / 16) * 9;
-
-    public static final int WINDOW_HEIGHT_BAR = 16 + 8;
-
-    public static void main(String[] args) {
-        try {
-            UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-        } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | UnsupportedLookAndFeelException ex) {
-            ex.printStackTrace();
-        }
-
-        MainContractInterface.View view = new MainView();
-        MainContractInterface.Presenter presenter = new MainPresenter(view);
-
-        view.openView();
+    /**
+     * This method is a fancy cover method for {@link EventQueue#invokeLater(Runnable)}, to disguise the AWT event queue.
+     *
+     * @param runnable
+     */
+    public void post(Runnable runnable) {
+        EventQueue.invokeLater(runnable);
     }
 }

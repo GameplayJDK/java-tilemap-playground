@@ -16,28 +16,19 @@
  * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package de.gameplayjdk.jwfcimage;
+package de.gameplayjdk.jwfcimage.data;
 
-import javax.swing.*;
+import de.gameplayjdk.jwfcimage.data.entity.EntityAbstract;
 
-public class Main {
+import java.util.List;
 
-    public static final String WINDOW_TITLE = "java-wfc-image";
-    public static final int WINDOW_WIDTH = 800;
-    public static final int WINDOW_HEIGHT = (Main.WINDOW_WIDTH / 16) * 9;
+public interface RepositoryInterface<E extends EntityAbstract> {
 
-    public static final int WINDOW_HEIGHT_BAR = 16 + 8;
+    public E create();
 
-    public static void main(String[] args) {
-        try {
-            UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-        } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | UnsupportedLookAndFeelException ex) {
-            ex.printStackTrace();
-        }
+    public boolean add(E entity);
 
-        MainContractInterface.View view = new MainView();
-        MainContractInterface.Presenter presenter = new MainPresenter(view);
+    public E getById(int id);
 
-        view.openView();
-    }
+    public List<E> getAll();
 }

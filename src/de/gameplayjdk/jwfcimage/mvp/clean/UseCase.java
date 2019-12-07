@@ -16,59 +16,52 @@
  * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package de.gameplayjdk.jwfcimage.loop;
+package de.gameplayjdk.jwfcimage.mvp.clean;
 
-public class Loop extends Thread {
+public abstract class UseCase<P extends UseCase.RequestValueInterface, Q extends UseCase.ResponseValueInterface, R extends UseCase.ErrorResponseValueInterface> {
 
-    private static final int TARGET_TPS = 60;
-    private static final int SKIP_LIMIT = 5;
+    private P requestValue;
 
-    private boolean active;
+    private UseCaseCallback<Q, R> useCaseCallback;
 
-    private final LoopCallbackInterface callback;
-
-    public Loop(LoopCallbackInterface callback) {
-        super("Loop");
-
-        this.active = false;
-
-        this.callback = callback;
+    public UseCase() {
     }
 
-    @Override
-    public void run() {
-        long timeNow = 0L;
-        long timeLast = System.currentTimeMillis();
-
-        final double time = (1.0D / Loop.TARGET_TPS) * 1000;
-        double delta = 0.0D;
-
-        int skip = 0;
-
-        while (this.active) {
-            timeNow = System.currentTimeMillis();
-
-            delta += (timeNow - timeLast) / time;
-            timeLast = timeNow;
-
-            skip = 0;
-            while (delta >= 1.0D && skip < Loop.SKIP_LIMIT) {
-                this.callback.update(delta);
-
-                delta--;
-
-                skip++;
-            }
-
-            this.callback.render();
-        }
+    public final void execute() {
+        this.executeUseCase(this.requestValue);
     }
 
-    public boolean isActive() {
-        return this.active;
+    protected abstract void executeUseCase(P requestValue);
+
+    public P getRequestValue() {
+        return this.requestValue;
     }
 
-    public void setActive(boolean active) {
-        this.active = active;
+    public void setRequestValue(P requestValue) {
+        this.requestValue = requestValue;
+    }
+
+    public UseCaseCallback<Q, R> getUseCaseCallback() {
+        return this.useCaseCallback;
+    }
+
+    public void setUseCaseCallback(UseCaseCallback<Q, R> useCaseCallback) {
+        this.useCaseCallback = useCaseCallback;
+    }
+
+    public interface RequestValueInterface {
+    }
+
+    public interface ResponseValueInterface {
+    }
+
+    public interface ErrorResponseValueInterface {
+    }
+
+    public static interface UseCaseCallback<Q, R> {
+
+        void onSuccess(Q response);
+
+        void onError(R errorResponse);
     }
 }

@@ -16,59 +16,33 @@
  * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package de.gameplayjdk.jwfcimage.loop;
+package de.gameplayjdk.jwfcimage.data.entity;
 
-public class Loop extends Thread {
+import de.gameplayjdk.jwfcimage.data.handler.TileMapGeneratorInterface;
 
-    private static final int TARGET_TPS = 60;
-    private static final int SKIP_LIMIT = 5;
+public class EntityTileMapGenerator extends EntityAbstract {
 
-    private boolean active;
+    private String name;
 
-    private final LoopCallbackInterface callback;
+    private TileMapGeneratorInterface generator;
 
-    public Loop(LoopCallbackInterface callback) {
-        super("Loop");
-
-        this.active = false;
-
-        this.callback = callback;
+    public EntityTileMapGenerator(int id) {
+        super(id);
     }
 
-    @Override
-    public void run() {
-        long timeNow = 0L;
-        long timeLast = System.currentTimeMillis();
-
-        final double time = (1.0D / Loop.TARGET_TPS) * 1000;
-        double delta = 0.0D;
-
-        int skip = 0;
-
-        while (this.active) {
-            timeNow = System.currentTimeMillis();
-
-            delta += (timeNow - timeLast) / time;
-            timeLast = timeNow;
-
-            skip = 0;
-            while (delta >= 1.0D && skip < Loop.SKIP_LIMIT) {
-                this.callback.update(delta);
-
-                delta--;
-
-                skip++;
-            }
-
-            this.callback.render();
-        }
+    public String getName() {
+        return this.name;
     }
 
-    public boolean isActive() {
-        return this.active;
+    public void setName(String name) {
+        this.name = name;
     }
 
-    public void setActive(boolean active) {
-        this.active = active;
+    public TileMapGeneratorInterface getGenerator() {
+        return this.generator;
+    }
+
+    public void setGenerator(TileMapGeneratorInterface generator) {
+        this.generator = generator;
     }
 }

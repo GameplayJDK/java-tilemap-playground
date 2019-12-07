@@ -22,6 +22,10 @@ import de.gameplayjdk.jwfcimage.image.ImageDataInterface;
 import de.gameplayjdk.jwfcimage.image.ImageLogic;
 import de.gameplayjdk.jwfcimage.loop.Loop;
 import de.gameplayjdk.jwfcimage.loop.LoopCallbackAdapter;
+import de.gameplayjdk.jwfcimage.mvp.clean.UseCase;
+import de.gameplayjdk.jwfcimage.mvp.clean.UseCaseHandler;
+import de.gameplayjdk.jwfcimage.usecase.UseCaseAttachAvailableExtension;
+import de.gameplayjdk.jwfcimage.usecase.UseCaseLoadTileMap;
 import de.gameplayjdk.jwfcimage.utility.Vector;
 
 import java.io.File;
@@ -34,6 +38,11 @@ public class MainPresenter implements MainContractInterface.Presenter {
 
     private final Loop loop;
 
+    private final UseCaseHandler useCaseHandler;
+
+    private final UseCaseLoadTileMap useCaseLoadTileMap;
+    private final UseCaseAttachAvailableExtension useCaseAttachAvailableExtension;
+
     private ImageLogic imageLogic;
 
     public MainPresenter(MainContractInterface.View view) {
@@ -45,16 +54,35 @@ public class MainPresenter implements MainContractInterface.Presenter {
         this.loop = new Loop(this.callbackAdapter);
 
         this.imageLogic = null;
+
+        this.useCaseHandler = UseCaseHandler.getInstance();
+
+        this.useCaseLoadTileMap = UseCaseLoadTileMap.newInstance();
+        this.useCaseAttachAvailableExtension = UseCaseAttachAvailableExtension.newInstance();
     }
 
     @Override
     public void start() {
         this.loop.setActive(true);
         this.loop.start();
+
+        this.useCaseHandler.execute(this.useCaseAttachAvailableExtension, new UseCaseAttachAvailableExtension.RequestValue(), new UseCase.UseCaseCallback<UseCaseAttachAvailableExtension.ResponseValue, UseCaseAttachAvailableExtension.ErrorResponseValue>() {
+            @Override
+            public void onSuccess(UseCaseAttachAvailableExtension.ResponseValue response) {
+                // TODO: Set observable.
+            }
+
+            @Override
+            public void onError(UseCaseAttachAvailableExtension.ErrorResponseValue errorResponse) {
+                // TODO: Show error message.
+            }
+        });
     }
 
     @Override
     public void stop() {
+        this.useCaseHandler.shutdown();
+
         this.loop.setActive(false);
         if (this.loop.isAlive()) {
             try {
@@ -73,10 +101,26 @@ public class MainPresenter implements MainContractInterface.Presenter {
     }
 
     @Override
-    public void openImage(File file) {
-        // TODO: Implement.
+    public void loadFile(File file, int handlerId) {
+        // TODO: Get tile map handler using id inside the use case.
+        UseCaseLoadTileMap.RequestValue requestValue = new UseCaseLoadTileMap.RequestValue(file, handlerId);
 
-        System.out.println("Not yet supported.");
+        this.useCaseHandler.execute(this.useCaseLoadTileMap, requestValue, new UseCase.UseCaseCallback<UseCaseLoadTileMap.ResponseValue, UseCaseLoadTileMap.ErrorResponseValue>() {
+            @Override
+            public void onSuccess(UseCaseLoadTileMap.ResponseValue response) {
+                System.out.println("Not yet supported.");
+            }
+
+            @Override
+            public void onError(UseCaseLoadTileMap.ErrorResponseValue errorResponse) {
+                System.out.println("Error loading file.");
+            }
+        });
+    }
+
+    @Override
+    public void saveFile(File file, int handlerId) {
+        // TODO: Implement.
     }
 
     @Override

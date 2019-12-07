@@ -16,59 +16,40 @@
  * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package de.gameplayjdk.jwfcimage.loop;
+package de.gameplayjdk.jwfcimage.data;
 
-public class Loop extends Thread {
+import de.gameplayjdk.jwfcimage.data.entity.EntityTileMap;
 
-    private static final int TARGET_TPS = 60;
-    private static final int SKIP_LIMIT = 5;
+public class RepositoryTileMap extends RepositoryAbstract<EntityTileMap> {
 
-    private boolean active;
+    private static RepositoryTileMap instance;
 
-    private final LoopCallbackInterface callback;
+    public static RepositoryTileMap getInstance() {
+        if (null == RepositoryTileMap.instance) {
+            RepositoryTileMap.instance = new RepositoryTileMap();
+        }
 
-    public Loop(LoopCallbackInterface callback) {
-        super("Loop");
+        return RepositoryTileMap.instance;
+    }
 
-        this.active = false;
+    private EntityTileMap entity;
 
-        this.callback = callback;
+    public RepositoryTileMap() {
+        super();
+
+        this.entity = null;
     }
 
     @Override
-    public void run() {
-        long timeNow = 0L;
-        long timeLast = System.currentTimeMillis();
-
-        final double time = (1.0D / Loop.TARGET_TPS) * 1000;
-        double delta = 0.0D;
-
-        int skip = 0;
-
-        while (this.active) {
-            timeNow = System.currentTimeMillis();
-
-            delta += (timeNow - timeLast) / time;
-            timeLast = timeNow;
-
-            skip = 0;
-            while (delta >= 1.0D && skip < Loop.SKIP_LIMIT) {
-                this.callback.update(delta);
-
-                delta--;
-
-                skip++;
-            }
-
-            this.callback.render();
-        }
+    public EntityTileMap create() {
+        return new EntityTileMap(this.getNewId());
     }
 
-    public boolean isActive() {
-        return this.active;
+    public EntityTileMap getEntity() {
+        return this.entity;
     }
 
-    public void setActive(boolean active) {
-        this.active = active;
+    public void setEntity(EntityTileMap entity) {
+        this.entity = entity;
     }
 }
