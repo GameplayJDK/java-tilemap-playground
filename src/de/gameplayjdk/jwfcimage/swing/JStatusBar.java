@@ -21,12 +21,11 @@ package de.gameplayjdk.jwfcimage.swing;
 import javax.swing.*;
 import javax.swing.border.BevelBorder;
 import java.awt.*;
+import java.awt.event.ActionListener;
 
 public class JStatusBar extends JPanel {
 
-    // TODO: Make message disappear after some time. Use javax.swing.Timer for that.
-
-    private JLabel label;
+    public static final int TIMER_DELAY_MS = 5 * 1000;
 
     public JStatusBar(int width, int height) {
         super();
@@ -48,18 +47,37 @@ public class JStatusBar extends JPanel {
     private void initialize() {
         BoxLayout layout = new BoxLayout(this, BoxLayout.X_AXIS);
         this.setLayout(layout);
+    }
 
+    public void addMessage(final String message) {
         Dimension dimension = new Dimension(8, 0);
-        Component component = Box.createRigidArea(dimension);
+        final Component component = Box.createRigidArea(dimension);
         this.add(component);
 
-        JLabel label = new JLabel();
+        final JLabel label = new JLabel();
+        label.setText(message);
+        label.setToolTipText(message);
         this.add(label);
 
-        this.label = label;
+        this.refresh();
+
+        ActionListener actionListener = event -> {
+            this.remove(component);
+            this.remove(label);
+
+            this.refresh();
+        };
+
+        Timer timer = new Timer(JStatusBar.TIMER_DELAY_MS, actionListener);
+        timer.setRepeats(false);
+
+        timer.start();
     }
 
-    public void setMessage(String message) {
-        this.label.setText(message);
+    private void refresh() {
+        this.revalidate();
+        this.repaint();
     }
+
+
 }

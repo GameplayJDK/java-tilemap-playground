@@ -113,7 +113,7 @@ public class MainPresenter implements MainContractInterface.Presenter {
 
             @Override
             public void onError(UseCaseLoadTileMap.ErrorResponseValue errorResponse) {
-                System.out.println("Error loading file.");
+                MainPresenter.this.view.showStatusMessage("Alarm");
             }
         });
     }

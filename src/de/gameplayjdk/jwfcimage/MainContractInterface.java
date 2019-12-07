@@ -42,7 +42,7 @@ public interface MainContractInterface {
 
         public void showAboutDialog();
 
-        public void showMessage(String message);
+        public void showStatusMessage(String message);
 
         public void moveOffset(Vector vector);
 

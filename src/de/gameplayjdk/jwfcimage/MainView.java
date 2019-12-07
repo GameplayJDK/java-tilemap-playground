@@ -117,7 +117,7 @@ public class MainView extends JFrame implements MainContractInterface.View {
                 // TODO: Implement handler entity data. Use the action class and setAction() method.
 
                 JMenuItem menuItem = new JMenuItem("Save file...", KeyEvent.VK_E);
-                menuItem.addActionListener(event -> this.showLoadFileDialog(-1));
+                menuItem.addActionListener(event -> this.showSaveFileDialog(-1));
                 menu.add(menuItem);
             }
 
@@ -203,6 +203,8 @@ public class MainView extends JFrame implements MainContractInterface.View {
         }
     }
 
+    private int i = 0;
+
     @Override
     public void showSaveFileDialog(int handlerId) {
         // TODO: Implement.
@@ -214,8 +216,8 @@ public class MainView extends JFrame implements MainContractInterface.View {
     }
 
     @Override
-    public void showMessage(String message) {
-        this.statusBar.setMessage(message);
+    public void showStatusMessage(String message) {
+        this.statusBar.addMessage(message);
     }
 
     @Override
