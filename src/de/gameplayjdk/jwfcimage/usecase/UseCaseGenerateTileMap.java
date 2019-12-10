@@ -19,48 +19,46 @@
 package de.gameplayjdk.jwfcimage.usecase;
 
 import de.gameplayjdk.jwfcimage.data.RepositoryTileMap;
-import de.gameplayjdk.jwfcimage.data.RepositoryTileMapHandler;
+import de.gameplayjdk.jwfcimage.data.RepositoryTileMapGenerator;
 import de.gameplayjdk.jwfcimage.data.entity.EntityTileMap;
-import de.gameplayjdk.jwfcimage.data.entity.EntityTileMapHandler;
-import de.gameplayjdk.jwfcimage.data.handler.TileMapHandlerInterface;
+import de.gameplayjdk.jwfcimage.data.entity.EntityTileMapGenerator;
+import de.gameplayjdk.jwfcimage.data.handler.TileMapGeneratorInterface;
 import de.gameplayjdk.jwfcimage.engine.data.TileMapAbstract;
 import de.gameplayjdk.jwfcimage.mvp.clean.UseCaseAbstract;
 
-import java.io.File;
+public class UseCaseGenerateTileMap extends UseCaseAbstract<UseCaseGenerateTileMap.RequestValue, UseCaseGenerateTileMap.ResponseValue, UseCaseGenerateTileMap.ErrorResponseValue> {
 
-public class UseCaseLoadTileMap extends UseCaseAbstract<UseCaseLoadTileMap.RequestValue, UseCaseLoadTileMap.ResponseValue, UseCaseLoadTileMap.ErrorResponseValue> {
-
-    public static UseCaseLoadTileMap newInstance() {
-        return new UseCaseLoadTileMap(RepositoryTileMap.getInstance(), RepositoryTileMapHandler.getInstance());
+    public static UseCaseGenerateTileMap newInstance() {
+        return new UseCaseGenerateTileMap(RepositoryTileMap.getInstance(), RepositoryTileMapGenerator.getInstance());
     }
 
     private final RepositoryTileMap repository;
-    private final RepositoryTileMapHandler repositoryHandler;
+    private final RepositoryTileMapGenerator repositoryGenerator;
 
-    public UseCaseLoadTileMap(RepositoryTileMap repository, RepositoryTileMapHandler repositoryHandler) {
+    public UseCaseGenerateTileMap(RepositoryTileMap repository, RepositoryTileMapGenerator repositoryGenerator) {
         this.repository = repository;
-        this.repositoryHandler = repositoryHandler;
+        this.repositoryGenerator = repositoryGenerator;
     }
 
     @Override
     protected void executeUseCase(RequestValue requestValue) {
-        File file = requestValue.getFile();
+        TileMapGeneratorInterface generator = this.getGenerator(requestValue);
 
-        if (null == file) {
-            this.callOnErrorCallback(ErrorResponseValue.Type.FILE_NOT_SET);
-
-            return;
-        }
-
-        TileMapHandlerInterface handler = this.getHandler(requestValue);
-
-        if (null == handler) {
-            this.callOnErrorCallback(ErrorResponseValue.Type.HANDLER_NOT_SET);
+        if (null == generator) {
+            this.callOnErrorCallback(ErrorResponseValue.Type.GENERATOR_NOT_SET);
 
             return;
         }
 
-        TileMapAbstract tileMap = handler.load(file);
+        EntityTileMap entity = this.repository.getEntity();
+
+        if (null == entity) {
+            this.callOnErrorCallback(ErrorResponseValue.Type.ENTITY_NOT_SET);
+
+            return;
+        }
+
+        TileMapAbstract tileMap = entity.getTileMap();
 
         if (null == tileMap) {
             this.callOnErrorCallback(ErrorResponseValue.Type.TILEMAP_NOT_SET);
@@ -68,7 +66,17 @@ public class UseCaseLoadTileMap extends UseCaseAbstract<UseCaseLoadTileMap.Reque
             return;
         }
 
-        EntityTileMap entity = this.repository.create();
+        // TODO: Consider breaking this up into multiple methods.
+
+        tileMap = generator.generate(tileMap);
+
+        if (null == tileMap) {
+            this.callOnErrorCallback(ErrorResponseValue.Type.TILEMAP_GENERATE_FAILED);
+
+            return;
+        }
+
+        entity = this.repository.create();
         entity.setTileMap(tileMap);
 
         if (this.repository.add(entity)) {
@@ -82,16 +90,16 @@ public class UseCaseLoadTileMap extends UseCaseAbstract<UseCaseLoadTileMap.Reque
         this.callOnErrorCallback(ErrorResponseValue.Type.REPOSITORY_ADD_FAILED);
     }
 
-    private TileMapHandlerInterface getHandler(RequestValue requestValue) {
-        int handlerId = requestValue.getHandlerId();
+    private TileMapGeneratorInterface getGenerator(RequestValue requestValue) {
+        int generatorId = requestValue.getGeneratorId();
 
-        EntityTileMapHandler entity = this.repositoryHandler.getById(handlerId);
+        EntityTileMapGenerator entity = this.repositoryGenerator.getById(generatorId);
 
         if (null == entity) {
             return null;
         }
 
-        return entity.getHandler();
+        return entity.getGenerator();
     }
 
     private void callOnSuccessCallback(EntityTileMap entity) {
@@ -110,22 +118,14 @@ public class UseCaseLoadTileMap extends UseCaseAbstract<UseCaseLoadTileMap.Reque
 
     public static class RequestValue implements UseCaseAbstract.RequestValueInterface {
 
-        private final File file;
+        private final int generatorId;
 
-        private final int handlerId;
-
-        public RequestValue(File file, int handlerId) {
-            this.file = file;
-
-            this.handlerId = handlerId;
+        public RequestValue(int generatorId) {
+            this.generatorId = generatorId;
         }
 
-        public File getFile() {
-            return this.file;
-        }
-
-        public int getHandlerId() {
-            return this.handlerId;
+        public int getGeneratorId() {
+            return this.generatorId;
         }
     }
 
@@ -145,9 +145,10 @@ public class UseCaseLoadTileMap extends UseCaseAbstract<UseCaseLoadTileMap.Reque
     public static class ErrorResponseValue implements UseCaseAbstract.ErrorResponseValueInterface {
 
         public static enum Type {
-            FILE_NOT_SET,
-            HANDLER_NOT_SET,
+            GENERATOR_NOT_SET,
+            ENTITY_NOT_SET,
             TILEMAP_NOT_SET,
+            TILEMAP_GENERATE_FAILED,
             REPOSITORY_ADD_FAILED,
         }
 

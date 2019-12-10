@@ -21,22 +21,17 @@ package de.gameplayjdk.jwfcimage.engine.data;
 import de.gameplayjdk.jwfcimage.image.ImageScreen;
 
 import java.util.Arrays;
-import java.util.Random;
 
 public class TileMap extends TileMapAbstract {
 
     public static final int TILE_SIZE = 16;
 
-    private Tile[] map;
-
-    private final Random random;
+    private final Tile[] map;
 
     public TileMap(int width, int height, int tileSize) {
         super(width, height, tileSize);
 
         this.map = new Tile[this.width * this.height];
-
-        this.random = new Random();
 
         this.initialize();
     }
@@ -45,36 +40,6 @@ public class TileMap extends TileMapAbstract {
         Tile.initialize();
 
         Arrays.fill(this.map, Tile.empty);
-    }
-
-    public void generate() {
-        // TODO: Generate tilemap using java-wfc library. - Move the logic to an extension though.
-
-        int index = this.random.nextInt(this.map.length);
-
-        Tile tile = this.map[index];
-
-        if (null == tile) {
-            return;
-        }
-
-        if (tile.getId() == Tile.empty.getId()) {
-            this.map[index] = Tile.water;
-
-            return;
-        }
-
-        if (tile.getId() == Tile.water.getId()) {
-            this.map[index] = Tile.ground;
-
-            return;
-        }
-
-        if (tile.getId() == Tile.ground.getId()) {
-            this.map[index] = Tile.empty;
-
-            return;
-        }
     }
 
     public void update(double deltaTime) {
@@ -95,5 +60,10 @@ public class TileMap extends TileMapAbstract {
                 tile.render(screen, x + (w * this.tileSize), y + (h * this.tileSize));
             }
         }
+    }
+
+    @Override
+    public TileAbstract[] getMap() {
+        return this.map;
     }
 }

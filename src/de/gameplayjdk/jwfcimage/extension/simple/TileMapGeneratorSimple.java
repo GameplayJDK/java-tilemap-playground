@@ -16,15 +16,46 @@
  * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package de.gameplayjdk.jwfcimage.data.handler;
+package de.gameplayjdk.jwfcimage.extension.simple;
 
+import de.gameplayjdk.jwfcimage.data.handler.TileMapGeneratorInterface;
+import de.gameplayjdk.jwfcimage.engine.data.Tile;
+import de.gameplayjdk.jwfcimage.engine.data.TileAbstract;
+import de.gameplayjdk.jwfcimage.engine.data.TileMap;
 import de.gameplayjdk.jwfcimage.engine.data.TileMapAbstract;
 
-import java.io.File;
+import java.util.Random;
 
-public interface TileMapHandlerInterface {
+public class TileMapGeneratorSimple implements TileMapGeneratorInterface {
 
-    public TileMapAbstract load(File file);
+    // TODO: Implement properly.
 
-    public boolean save(File file, TileMapAbstract tileMap);
+    private final Random random;
+
+    public TileMapGeneratorSimple() {
+        this.random = new Random();
+    }
+
+    @Override
+    public TileMapAbstract generate(TileMapAbstract tileMap) {
+        TileAbstract[] map = tileMap.getMap();
+
+        int index = this.random.nextInt(map.length);
+
+        TileAbstract tile = map[index];
+
+        if (null == tile) {
+            return tileMap;
+        }
+
+        if (tile.getId() == Tile.empty.getId()) {
+            map[index] = Tile.water;
+        } else if (tile.getId() == Tile.water.getId()) {
+            map[index] = Tile.ground;
+        } else if (tile.getId() == Tile.ground.getId()) {
+            map[index] = Tile.empty;
+        }
+
+        return tileMap;
+    }
 }

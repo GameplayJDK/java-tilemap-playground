@@ -16,15 +16,38 @@
  * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package de.gameplayjdk.jwfcimage.data.handler;
+package de.gameplayjdk.jwfcimage.engine.data;
 
-import de.gameplayjdk.jwfcimage.engine.data.TileMapAbstract;
+import de.gameplayjdk.jwfcimage.engine.EngineObjectInterface;
+import de.gameplayjdk.jwfcimage.engine.Sprite;
+import de.gameplayjdk.jwfcimage.image.ImageScreen;
 
-import java.io.File;
+public abstract class TileAbstract implements EngineObjectInterface {
 
-public interface TileMapHandlerInterface {
+    protected final int id;
 
-    public TileMapAbstract load(File file);
+    protected Sprite sprite;
 
-    public boolean save(File file, TileMapAbstract tileMap);
+    public TileAbstract(int id, Sprite sprite) {
+        this.id = id;
+        this.sprite = sprite;
+    }
+
+    @Override
+    public abstract void update(double deltaTime);
+
+    @Override
+    public abstract void render(ImageScreen screen, int x, int y);
+
+    public int getId() {
+        return this.id;
+    }
+
+    public Sprite getSprite() {
+        return this.sprite;
+    }
+
+    public void setSprite(Sprite sprite) {
+        this.sprite = sprite;
+    }
 }

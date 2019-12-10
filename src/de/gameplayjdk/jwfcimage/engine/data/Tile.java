@@ -26,7 +26,7 @@ import de.gameplayjdk.jwfcimage.engine.data.tile.TileGround;
 import de.gameplayjdk.jwfcimage.engine.data.tile.TileWater;
 import de.gameplayjdk.jwfcimage.image.ImageScreen;
 
-public class Tile implements EngineObjectInterface {
+public class Tile extends TileAbstract {
 
     public static Tile empty;
     public static Tile water;
@@ -44,13 +44,8 @@ public class Tile implements EngineObjectInterface {
         }
     }
 
-    private final int id;
-
-    private Sprite sprite;
-
     public Tile(int id, Sprite sprite) {
-        this.id = id;
-        this.sprite = sprite;
+        super(id, sprite);
     }
 
     public void update(double deltaTime) {
@@ -63,17 +58,5 @@ public class Tile implements EngineObjectInterface {
 
         screen.drawSprite(x, y, this.sprite);
         screen.drawRectangleOutline(x, y, this.sprite.getWidth(), this.sprite.getHeight(), 1, Color.COLOR_SPRITE_BORDER);
-    }
-
-    public int getId() {
-        return this.id;
-    }
-
-    public Sprite getSprite() {
-        return this.sprite;
-    }
-
-    public void setSprite(Sprite sprite) {
-        this.sprite = sprite;
     }
 }

@@ -46,7 +46,7 @@ public class UseCaseHandler {
         this.useCaseScheduler = useCaseScheduler;
     }
 
-    public <P extends UseCase.RequestValueInterface, Q extends UseCase.ResponseValueInterface, R extends UseCase.ErrorResponseValueInterface> void execute(final UseCase<P, Q, R> useCase, P requestValue, UseCase.UseCaseCallback<Q, R> useCaseCallback) {
+    public <P extends UseCaseAbstract.RequestValueInterface, Q extends UseCaseAbstract.ResponseValueInterface, R extends UseCaseAbstract.ErrorResponseValueInterface> void execute(final UseCaseAbstract<P, Q, R> useCase, P requestValue, UseCaseAbstract.UseCaseCallback<Q, R> useCaseCallback) {
         useCase.setRequestValue(requestValue);
 
         UiCallbackWrapper<Q, R> uiCallbackWrapper = new UiCallbackWrapper<Q, R>(useCaseCallback, this);
@@ -55,11 +55,11 @@ public class UseCaseHandler {
         this.useCaseScheduler.execute(useCase::execute);
     }
 
-    private <V extends UseCase.ResponseValueInterface, W extends UseCase.ErrorResponseValueInterface> void notifyResponse(final V responseValue, final UseCase.UseCaseCallback<V, W> useCaseCallback) {
+    private <V extends UseCaseAbstract.ResponseValueInterface, W extends UseCaseAbstract.ErrorResponseValueInterface> void notifyResponse(final V responseValue, final UseCaseAbstract.UseCaseCallback<V, W> useCaseCallback) {
         this.useCaseScheduler.notifyResponse(responseValue, useCaseCallback);
     }
 
-    private <V extends UseCase.ResponseValueInterface, W extends UseCase.ErrorResponseValueInterface> void notifyError(final W errorResponseValue, final UseCase.UseCaseCallback<V, W> useCaseCallback) {
+    private <V extends UseCaseAbstract.ResponseValueInterface, W extends UseCaseAbstract.ErrorResponseValueInterface> void notifyError(final W errorResponseValue, final UseCaseAbstract.UseCaseCallback<V, W> useCaseCallback) {
         this.useCaseScheduler.notifyError(errorResponseValue, useCaseCallback);
     }
 
@@ -67,13 +67,13 @@ public class UseCaseHandler {
         this.useCaseScheduler.shutdown();
     }
 
-    private static class UiCallbackWrapper<V extends UseCase.ResponseValueInterface, W extends UseCase.ErrorResponseValueInterface> implements UseCase.UseCaseCallback<V, W> {
+    private static class UiCallbackWrapper<V extends UseCaseAbstract.ResponseValueInterface, W extends UseCaseAbstract.ErrorResponseValueInterface> implements UseCaseAbstract.UseCaseCallback<V, W> {
 
-        private final UseCase.UseCaseCallback<V, W> useCaseCallback;
+        private final UseCaseAbstract.UseCaseCallback<V, W> useCaseCallback;
 
         private final UseCaseHandler mUseCaseHandler;
 
-        public UiCallbackWrapper(UseCase.UseCaseCallback<V, W> useCaseCallback, UseCaseHandler useCaseHandler) {
+        public UiCallbackWrapper(UseCaseAbstract.UseCaseCallback<V, W> useCaseCallback, UseCaseHandler useCaseHandler) {
             this.useCaseCallback = useCaseCallback;
 
             this.mUseCaseHandler = useCaseHandler;

@@ -18,12 +18,17 @@
 
 package de.gameplayjdk.jwfcimage;
 
+import de.gameplayjdk.jwfcimage.data.entity.EntityTileMap;
+import de.gameplayjdk.jwfcimage.data.entity.EntityTileMapGenerator;
+import de.gameplayjdk.jwfcimage.data.entity.EntityTileMapHandler;
 import de.gameplayjdk.jwfcimage.image.ImageDataInterface;
 import de.gameplayjdk.jwfcimage.mvp.PresenterInterface;
 import de.gameplayjdk.jwfcimage.mvp.ViewInterface;
 import de.gameplayjdk.jwfcimage.utility.Vector;
+import de.gameplayjdk.jwfcimage.view.MenuData;
 
 import java.io.File;
+import java.util.List;
 
 public interface MainContractInterface {
 
@@ -44,9 +49,13 @@ public interface MainContractInterface {
 
         public void showStatusMessage(String message);
 
+        // TODO: These could be replaced by calling the presenter directly from the listeners.
         public void moveOffset(Vector vector);
 
+        // TODO: These could be replaced by calling the presenter directly from the listeners.
         public void moveVector(Vector vector);
+
+        public void updateMenu(MenuData menuData);
     }
 
     public static interface Presenter extends PresenterInterface {
@@ -65,5 +74,13 @@ public interface MainContractInterface {
         public void moveOffset(Vector vector);
 
         public void moveVector(Vector vector);
+
+        public void attachAvailableExtension();
+
+        public void updateMenu();
+
+        public void generateMap(int generatorId);
+
+        public void switchMap(int mapId);
     }
 }

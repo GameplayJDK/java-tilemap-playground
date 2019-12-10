@@ -20,6 +20,7 @@
 package de.gameplayjdk.jwfcimage.image;
 
 import de.gameplayjdk.jwfcimage.engine.data.TileMap;
+import de.gameplayjdk.jwfcimage.engine.data.TileMapAbstract;
 import de.gameplayjdk.jwfcimage.loop.LoopCallbackInterface;
 import de.gameplayjdk.jwfcimage.utility.Vector;
 
@@ -31,9 +32,7 @@ public class ImageLogic implements LoopCallbackInterface {
 
     private final ImageScreen screen;
 
-    private TileMap tileMap;
-
-    private double accumulator;
+    private TileMapAbstract tileMap;
 
     public ImageLogic(ImageDataInterface imageData) {
         this.imageData = imageData;
@@ -42,21 +41,13 @@ public class ImageLogic implements LoopCallbackInterface {
 
         this.screen = new ImageScreen(this.imageData.getWidth(), this.imageData.getHeight());
 
+        // TODO: Move this out of here, when the use case for loading the internal tilemap is done.
         this.tileMap = new TileMap(16, 16, TileMap.TILE_SIZE);
-
-        this.accumulator = 0.0D;
     }
 
     @Override
     public void update(double deltaTime) {
         this.tileMap.update(deltaTime);
-
-        this.accumulator += deltaTime;
-        if (this.accumulator >= 60.0D) {
-            this.tileMap.generate();
-
-            this.accumulator = 0.0D;
-        }
 
         this.offset.combine(this.vector);
     }
@@ -83,11 +74,11 @@ public class ImageLogic implements LoopCallbackInterface {
         this.vector.set(vector);
     }
 
-    public TileMap getTileMap() {
+    public TileMapAbstract getTileMap() {
         return this.tileMap;
     }
 
-    public void setTileMap(TileMap tileMap) {
+    public void setTileMap(TileMapAbstract tileMap) {
         this.tileMap = tileMap;
     }
 }

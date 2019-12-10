@@ -18,7 +18,154 @@
 
 package de.gameplayjdk.jwfcimage.usecase;
 
-public class UseCaseSaveTileMap {
+import de.gameplayjdk.jwfcimage.data.RepositoryTileMap;
+import de.gameplayjdk.jwfcimage.data.RepositoryTileMapHandler;
+import de.gameplayjdk.jwfcimage.data.entity.EntityTileMap;
+import de.gameplayjdk.jwfcimage.data.entity.EntityTileMapHandler;
+import de.gameplayjdk.jwfcimage.data.handler.TileMapHandlerInterface;
+import de.gameplayjdk.jwfcimage.engine.data.TileMapAbstract;
+import de.gameplayjdk.jwfcimage.mvp.clean.UseCaseAbstract;
 
-    // TODO: Implement.
+import java.io.File;
+
+public class UseCaseSaveTileMap extends UseCaseAbstract<UseCaseSaveTileMap.RequestValue, UseCaseSaveTileMap.ResponseValue, UseCaseSaveTileMap.ErrorResponseValue> {
+
+    public static UseCaseSaveTileMap newInstance() {
+        return new UseCaseSaveTileMap(RepositoryTileMap.getInstance(), RepositoryTileMapHandler.getInstance());
+    }
+
+    private final RepositoryTileMap repository;
+    private final RepositoryTileMapHandler repositoryHandler;
+
+    public UseCaseSaveTileMap(RepositoryTileMap repository, RepositoryTileMapHandler repositoryHandler) {
+        this.repository = repository;
+        this.repositoryHandler = repositoryHandler;
+    }
+
+    @Override
+    protected void executeUseCase(RequestValue requestValue) {
+        File file = requestValue.getFile();
+
+        if (null == file) {
+            this.callOnErrorCallback(ErrorResponseValue.Type.FILE_NOT_SET);
+
+            return;
+        }
+
+        TileMapHandlerInterface handler = this.getHandler(requestValue);
+
+        if (null == handler) {
+            this.callOnErrorCallback(ErrorResponseValue.Type.HANDLER_NOT_SET);
+
+            return;
+        }
+
+        EntityTileMap entity = this.repository.getEntity();
+
+        if (null == entity) {
+            this.callOnErrorCallback(ErrorResponseValue.Type.ENTITY_NOT_SET);
+
+            return;
+        }
+
+        TileMapAbstract tileMap = entity.getTileMap();
+
+        if (null == tileMap) {
+            this.callOnErrorCallback(ErrorResponseValue.Type.TILEMAP_NOT_SET);
+
+            return;
+        }
+
+        if (handler.save(file, tileMap)) {
+            // TODO: This might not be necessary.
+            this.repository.setEntity(entity);
+
+            this.callOnSuccessCallback(entity);
+
+            return;
+        }
+
+        this.callOnErrorCallback(ErrorResponseValue.Type.HANDLER_SAVE_FAILED);
+    }
+
+    private TileMapHandlerInterface getHandler(RequestValue requestValue) {
+        int handlerId = requestValue.getHandlerId();
+
+        EntityTileMapHandler entity = this.repositoryHandler.getById(handlerId);
+
+        if (null == entity) {
+            return null;
+        }
+
+        return entity.getHandler();
+    }
+
+    private void callOnSuccessCallback(EntityTileMap entity) {
+        ResponseValue responseValue = new ResponseValue(entity);
+
+        this.getUseCaseCallback()
+                .onSuccess(responseValue);
+    }
+
+    private void callOnErrorCallback(ErrorResponseValue.Type type) {
+        ErrorResponseValue errorResponseValue = new ErrorResponseValue(type);
+
+        this.getUseCaseCallback()
+                .onError(errorResponseValue);
+    }
+
+    public static class RequestValue implements UseCaseAbstract.RequestValueInterface {
+
+        private final File file;
+
+        private final int handlerId;
+
+        public RequestValue(File file, int handlerId) {
+            this.file = file;
+
+            this.handlerId = handlerId;
+        }
+
+        public File getFile() {
+            return this.file;
+        }
+
+        public int getHandlerId() {
+            return this.handlerId;
+        }
+    }
+
+    public static class ResponseValue implements UseCaseAbstract.ResponseValueInterface {
+
+        private final EntityTileMap entity;
+
+        public ResponseValue(EntityTileMap entity) {
+            this.entity = entity;
+        }
+
+        public EntityTileMap getEntity() {
+            return this.entity;
+        }
+    }
+
+    public static class ErrorResponseValue implements UseCaseAbstract.ErrorResponseValueInterface {
+
+        public static enum Type {
+            FILE_NOT_SET,
+            HANDLER_NOT_SET,
+            ENTITY_NOT_SET,
+            TILEMAP_NOT_SET,
+            HANDLER_SAVE_FAILED,
+        }
+
+        private final Type type;
+
+        public ErrorResponseValue(Type type) {
+            this.type = type;
+        }
+
+        public Type getType() {
+            return this.type;
+        }
+    }
 }

@@ -16,15 +16,24 @@
  * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package de.gameplayjdk.jwfcimage.data.handler;
+package de.gameplayjdk.jwfcimage.extension.simple;
 
+import de.gameplayjdk.jwfcimage.data.handler.TileMapHandlerInterface;
 import de.gameplayjdk.jwfcimage.engine.data.TileMapAbstract;
 
 import java.io.File;
 
-public interface TileMapHandlerInterface {
+public class TileMapHandlerSimple implements TileMapHandlerInterface {
 
-    public TileMapAbstract load(File file);
+    // TODO: Implement.
 
-    public boolean save(File file, TileMapAbstract tileMap);
+    @Override
+    public TileMapAbstract load(File file) {
+        return null;
+    }
+
+    @Override
+    public boolean save(File file, TileMapAbstract tileMap) {
+        return false;
+    }
 }

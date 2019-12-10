@@ -16,15 +16,41 @@
  * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package de.gameplayjdk.jwfcimage.data.handler;
+package de.gameplayjdk.jwfcimage.view;
 
-import de.gameplayjdk.jwfcimage.engine.data.TileMapAbstract;
+import de.gameplayjdk.jwfcimage.data.entity.EntityTileMap;
+import de.gameplayjdk.jwfcimage.data.entity.EntityTileMapGenerator;
+import de.gameplayjdk.jwfcimage.data.entity.EntityTileMapHandler;
 
-import java.io.File;
+import java.util.List;
 
-public interface TileMapHandlerInterface {
+public class MenuData {
 
-    public TileMapAbstract load(File file);
+    private List<EntityTileMapHandler> listHandler;
+    private List<EntityTileMapGenerator> listGenerator;
+    private List<EntityTileMap> listMap;
 
-    public boolean save(File file, TileMapAbstract tileMap);
+    public List<EntityTileMapHandler> getListHandler() {
+        return this.listHandler;
+    }
+
+    public void setListHandler(List<EntityTileMapHandler> listHandler) {
+        this.listHandler = listHandler;
+    }
+
+    public List<EntityTileMapGenerator> getListGenerator() {
+        return this.listGenerator;
+    }
+
+    public void setListGenerator(List<EntityTileMapGenerator> listGenerator) {
+        this.listGenerator = listGenerator;
+    }
+
+    public List<EntityTileMap> getListMap() {
+        return this.listMap;
+    }
+
+    public void setListMap(List<EntityTileMap> listMap) {
+        this.listMap = listMap;
+    }
 }

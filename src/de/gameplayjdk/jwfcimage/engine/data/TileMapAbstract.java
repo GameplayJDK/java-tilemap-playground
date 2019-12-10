@@ -41,6 +41,8 @@ public abstract class TileMapAbstract implements EngineObjectInterface {
     @Override
     public abstract void render(ImageScreen screen, int x, int y);
 
+    public abstract TileAbstract[] getMap();
+
     public int getWidth() {
         return this.width;
     }

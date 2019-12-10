@@ -18,13 +18,13 @@
 
 package de.gameplayjdk.jwfcimage.mvp.clean;
 
-public abstract class UseCase<P extends UseCase.RequestValueInterface, Q extends UseCase.ResponseValueInterface, R extends UseCase.ErrorResponseValueInterface> {
+public abstract class UseCaseAbstract<P extends UseCaseAbstract.RequestValueInterface, Q extends UseCaseAbstract.ResponseValueInterface, R extends UseCaseAbstract.ErrorResponseValueInterface> {
 
     private P requestValue;
 
     private UseCaseCallback<Q, R> useCaseCallback;
 
-    public UseCase() {
+    public UseCaseAbstract() {
     }
 
     public final void execute() {

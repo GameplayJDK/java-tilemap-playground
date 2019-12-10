@@ -22,9 +22,9 @@ public interface UseCaseSchedulerInterface {
 
     public void execute(Runnable runnable);
 
-    public <V extends UseCase.ResponseValueInterface, W extends UseCase.ErrorResponseValueInterface> void notifyResponse(final V responseValue, final UseCase.UseCaseCallback<V, W> useCaseCallback);
+    public <V extends UseCaseAbstract.ResponseValueInterface, W extends UseCaseAbstract.ErrorResponseValueInterface> void notifyResponse(final V responseValue, final UseCaseAbstract.UseCaseCallback<V, W> useCaseCallback);
 
-    public <V extends UseCase.ResponseValueInterface, W extends UseCase.ErrorResponseValueInterface> void notifyError(final W errorResponseValue, final UseCase.UseCaseCallback<V, W> useCaseCallback);
+    public <V extends UseCaseAbstract.ResponseValueInterface, W extends UseCaseAbstract.ErrorResponseValueInterface> void notifyError(final W errorResponseValue, final UseCaseAbstract.UseCaseCallback<V, W> useCaseCallback);
 
     public void shutdown();
 }

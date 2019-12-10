@@ -18,24 +18,40 @@
 
 package de.gameplayjdk.jwfcimage.usecase;
 
+import de.gameplayjdk.jwfcimage.data.handler.TileMapGeneratorInterface;
+import de.gameplayjdk.jwfcimage.engine.data.TileMapAbstract;
 import de.gameplayjdk.jwfcimage.extension.access.Application;
-import de.gameplayjdk.jwfcimage.mvp.clean.UseCase;
+import de.gameplayjdk.jwfcimage.extension.simple.TileMapGeneratorSimple;
+import de.gameplayjdk.jwfcimage.extension.simple.TileMapHandlerSimple;
+import de.gameplayjdk.jwfcimage.mvp.clean.UseCaseAbstract;
 
-public class UseCaseAttachAvailableExtension extends UseCase<UseCaseAttachAvailableExtension.RequestValue, UseCaseAttachAvailableExtension.ResponseValue, UseCaseAttachAvailableExtension.ErrorResponseValue> {
-
-    private final Application application;
+public class UseCaseAttachAvailableExtension extends UseCaseAbstract<UseCaseAttachAvailableExtension.RequestValue, UseCaseAttachAvailableExtension.ResponseValue, UseCaseAttachAvailableExtension.ErrorResponseValue> {
 
     public static UseCaseAttachAvailableExtension newInstance() {
         return new UseCaseAttachAvailableExtension(Application.getInstance());
     }
 
+    private final Application application;
+
+    private boolean attachDefault;
+
     public UseCaseAttachAvailableExtension(Application application) {
         this.application = application;
+
+        this.attachDefault = false;
     }
 
     @Override
     protected void executeUseCase(RequestValue requestValue) {
-        if (this.application.attachAvailableExtension()) {
+        if (!this.attachDefault) {
+            this.attachDefault = true;
+
+            // TODO: Implement internal classes.
+            this.application.registerTileMapHandler("Simple (built-in)", true, true, new TileMapHandlerSimple());
+            this.application.registerTileMapGenerator("Simple (built-in)", new TileMapGeneratorSimple());
+        }
+
+        if (this.application.attachAvailableExtension() || this.attachDefault) {
             this.callOnSuccessCallback();
 
             return;
@@ -58,12 +74,12 @@ public class UseCaseAttachAvailableExtension extends UseCase<UseCaseAttachAvaila
                 .onError(errorResponseValue);
     }
 
-    public static class RequestValue implements UseCase.RequestValueInterface {
+    public static class RequestValue implements UseCaseAbstract.RequestValueInterface {
     }
 
-    public static class ResponseValue implements UseCase.ResponseValueInterface {
+    public static class ResponseValue implements UseCaseAbstract.ResponseValueInterface {
     }
 
-    public static class ErrorResponseValue implements UseCase.ErrorResponseValueInterface {
+    public static class ErrorResponseValue implements UseCaseAbstract.ErrorResponseValueInterface {
     }
 }

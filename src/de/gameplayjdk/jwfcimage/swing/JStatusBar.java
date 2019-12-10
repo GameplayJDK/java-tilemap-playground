@@ -68,6 +68,10 @@ public class JStatusBar extends JPanel {
             this.refresh();
         };
 
+        this.startNewTimer(actionListener);
+    }
+
+    private void startNewTimer(ActionListener actionListener) {
         Timer timer = new Timer(JStatusBar.TIMER_DELAY_MS, actionListener);
         timer.setRepeats(false);
 
@@ -78,6 +82,4 @@ public class JStatusBar extends JPanel {
         this.revalidate();
         this.repaint();
     }
-
-
 }

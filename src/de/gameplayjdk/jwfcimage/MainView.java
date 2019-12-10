@@ -18,16 +18,21 @@
 
 package de.gameplayjdk.jwfcimage;
 
+import de.gameplayjdk.jwfcimage.data.entity.EntityTileMap;
+import de.gameplayjdk.jwfcimage.data.entity.EntityTileMapGenerator;
+import de.gameplayjdk.jwfcimage.data.entity.EntityTileMapHandler;
 import de.gameplayjdk.jwfcimage.swing.JCanvas;
 import de.gameplayjdk.jwfcimage.swing.JStatusBar;
 import de.gameplayjdk.jwfcimage.utility.Extension;
 import de.gameplayjdk.jwfcimage.utility.Vector;
+import de.gameplayjdk.jwfcimage.view.MenuData;
 
 import javax.swing.*;
 import javax.swing.filechooser.FileFilter;
 import java.awt.*;
 import java.awt.event.*;
 import java.io.File;
+import java.util.List;
 
 public class MainView extends JFrame implements MainContractInterface.View {
 
@@ -39,6 +44,11 @@ public class MainView extends JFrame implements MainContractInterface.View {
 
     private JCanvas canvas;
     private JStatusBar statusBar;
+
+    private JMenu menuLoadFile;
+    private JMenu menuSaveFile;
+    private JMenu menuGenerate;
+    private JMenu menuSwitch;
 
     public MainView() throws HeadlessException {
         super();
@@ -106,34 +116,41 @@ public class MainView extends JFrame implements MainContractInterface.View {
             menu.setMnemonic(KeyEvent.VK_M);
 
             {
-                // TODO: Implement handler entity data. Use the action class and setAction() method.
+                JMenu menuSub = new JMenu("Load file...");
+                menuSub.setMnemonic(KeyEvent.VK_I);
 
-                JMenuItem menuItem = new JMenuItem("Load file...", KeyEvent.VK_I);
-                menuItem.addActionListener(event -> this.showLoadFileDialog(-1));
-                menu.add(menuItem);
+                this.menuLoadFile = menuSub;
+
+                menu.add(menuSub);
             }
 
             {
-                // TODO: Implement handler entity data. Use the action class and setAction() method.
+                JMenu menuSub = new JMenu("Save file...");
+                menuSub.setMnemonic(KeyEvent.VK_E);
 
-                JMenuItem menuItem = new JMenuItem("Save file...", KeyEvent.VK_E);
-                menuItem.addActionListener(event -> this.showSaveFileDialog(-1));
-                menu.add(menuItem);
+                this.menuSaveFile = menuSub;
+
+                menu.add(menuSub);
             }
 
             menu.addSeparator();
 
             {
-                // TODO: Implement map entity data. Use the action class and setAction() method.
+                JMenu menuSub = new JMenu("Generate...");
+                menuSub.setMnemonic(KeyEvent.VK_G);
 
+                this.menuGenerate = menuSub;
+
+                menu.add(menuSub);
+            }
+
+            menu.addSeparator();
+
+            {
                 JMenu menuSub = new JMenu("Switch...");
                 menuSub.setMnemonic(KeyEvent.VK_S);
 
-                {
-                    JMenuItem menuItem = new JMenuItem("Map #1", KeyEvent.VK_1);
-                    //menuItem.addActionListener(event -> ...);
-                    menuSub.add(menuItem);
-                }
+                this.menuSwitch = menuSub;
 
                 menu.add(menuSub);
             }
@@ -150,6 +167,8 @@ public class MainView extends JFrame implements MainContractInterface.View {
                 menuItem.addActionListener(event -> this.showAboutDialog());
                 menu.add(menuItem);
             }
+
+            // TODO: Add website/github link.
 
             menuBar.add(menu);
         }
@@ -172,6 +191,8 @@ public class MainView extends JFrame implements MainContractInterface.View {
         this.setVisible(true);
 
         this.canvas.requestFocus();
+
+        this.presenter.attachAvailableExtension();
     }
 
     @Override
@@ -228,6 +249,68 @@ public class MainView extends JFrame implements MainContractInterface.View {
     @Override
     public void moveVector(Vector vector) {
         this.presenter.moveVector(vector);
+    }
+
+    @Override
+    public void updateMenu(MenuData menuData) {
+        this.updateMenuHandler(menuData.getListHandler());
+        this.updateMenuGenerator(menuData.getListGenerator());
+        this.updateMenuSwitch(menuData.getListMap());
+    }
+
+    private void updateMenuHandler(List<EntityTileMapHandler> listHandler) {
+        this.menuLoadFile.removeAll();
+        this.menuSaveFile.removeAll();
+
+        for (final EntityTileMapHandler entity : listHandler) {
+            if (entity.isSupportLoad()) {
+                JMenuItem menuItem = new JMenuItem(entity.getName());
+                menuItem.addActionListener(event -> this.showLoadFileDialog(entity.getId()));
+
+                this.menuLoadFile.add(menuItem);
+            }
+
+            if (entity.isSupportSave()) {
+                JMenuItem menuItem = new JMenuItem(entity.getName());
+                menuItem.addActionListener(event -> this.showLoadFileDialog(entity.getId()));
+
+                this.menuSaveFile.add(menuItem);
+            }
+        }
+
+        this.menuLoadFile.revalidate();
+        this.menuLoadFile.repaint();
+
+        this.menuSaveFile.revalidate();
+        this.menuSaveFile.repaint();
+    }
+
+    private void updateMenuGenerator(List<EntityTileMapGenerator> listGenerator) {
+        this.menuGenerate.removeAll();
+
+        for (final EntityTileMapGenerator entity : listGenerator) {
+            JMenuItem menuItem = new JMenuItem(entity.getName());
+            menuItem.addActionListener(event -> this.presenter.generateMap(entity.getId()));
+
+            this.menuGenerate.add(menuItem);
+        }
+
+        this.menuGenerate.revalidate();
+        this.menuGenerate.repaint();
+    }
+
+    private void updateMenuSwitch(List<EntityTileMap> listMap) {
+        this.menuSwitch.removeAll();
+
+        for (final EntityTileMap entity : listMap) {
+            JMenuItem menuItem = new JMenuItem("Map #" + entity.getId());
+            menuItem.addActionListener(event -> this.presenter.switchMap(entity.getId()));
+
+            this.menuSwitch.add(menuItem);
+        }
+
+        this.menuSwitch.revalidate();
+        this.menuSwitch.repaint();
     }
 
     public static class WindowListener extends WindowAdapter {
@@ -376,6 +459,7 @@ public class MainView extends JFrame implements MainContractInterface.View {
                     ? Cursor.MOVE_CURSOR
                     : Cursor.DEFAULT_CURSOR;
 
+            // TODO: This could be changed to check for instance of "javax.swing.Component".
             if (source instanceof JPanel) {
                 ((JPanel) source).setCursor(Cursor.getPredefinedCursor(type));
             }
