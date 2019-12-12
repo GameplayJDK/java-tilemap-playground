@@ -18,6 +18,8 @@
 
 package de.gameplayjdk.jwfcimage;
 
+import de.gameplayjdk.jwfcimage.utility.OperatingSystem;
+
 import javax.swing.*;
 
 public class Main {
@@ -29,15 +31,50 @@ public class Main {
     public static final int WINDOW_HEIGHT_BAR = 16 + 8;
 
     public static void main(String[] args) {
-        try {
-            UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-        } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | UnsupportedLookAndFeelException ex) {
-            ex.printStackTrace();
-        }
+        Main.setupStyle();
 
         MainContractInterface.View view = new MainView();
         MainContractInterface.Presenter presenter = new MainPresenter(view);
 
         view.openView();
+    }
+
+    /**
+     * Value for "apple.awt.brushMetalLook". Decide if the mac brushed metal style should be used for the application window.
+     */
+    public static final String SYSTEM_PROPERTY_APPLE_BRUSH_METAL_LOOK = "false";
+
+    /**
+     * Value for "apple.awt.textantialiasing". Decide if the fonts should be rendered using antialiasing or not.
+     */
+    private static final String SYSTEM_PROPERTY_APPLE_TEXT_ANTIALIASING = "false";
+
+    /**
+     * Value for "apple.laf.useScreenMenuBar". Decide if the mac system menu bar should be used for JMenuBar instead.
+     */
+    private static final String SYSTEM_PROPERTY_APPLE_USE_SCREEN_MENU_BAR = "true";
+
+    private static void setupStyle() {
+//        System.getProperties()
+//                .list(System.out);
+
+        if (OperatingSystem.isMac()) {
+            // For more information on what is happening, see https://developer.apple.com/library/archive/technotes/tn2007/tn2196.html.
+            // For even more information, see https://developer.apple.com/library/archive/documentation/Java/Conceptual/Java14Development/07-NativePlatformIntegration/NativePlatformIntegration.html.
+            // Also, this mirror of a dead developer.apple.com article was a very useful resource: http://mirror.informatimago.com/next/developer.apple.com/documentation/Java/Conceptual/JavaPropVMInfoRef/Articles/JavaSystemProperties.html.
+
+            System.setProperty("apple.awt.brushMetalLook", Main.SYSTEM_PROPERTY_APPLE_BRUSH_METAL_LOOK);
+            System.setProperty("apple.awt.textantialiasing", Main.SYSTEM_PROPERTY_APPLE_TEXT_ANTIALIASING);
+
+            System.setProperty("apple.laf.useScreenMenuBar", Main.SYSTEM_PROPERTY_APPLE_USE_SCREEN_MENU_BAR);
+
+            System.setProperty("com.apple.mrj.application.apple.menu.about.name", Main.WINDOW_TITLE);
+        }
+
+        try {
+            UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+        } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | UnsupportedLookAndFeelException ex) {
+            ex.printStackTrace();
+        }
     }
 }
