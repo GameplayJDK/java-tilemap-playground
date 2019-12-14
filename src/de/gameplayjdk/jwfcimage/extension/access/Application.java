@@ -50,11 +50,15 @@ public final class Application {
 
     private final ApplicationExtensionManager extensionManager;
 
+    private boolean active;
+
     public Application(RepositoryTileMapHandler repositoryHandler, RepositoryTileMapGenerator repositoryGenerator, ApplicationExtensionManager extensionManager) {
         this.repositoryHandler = repositoryHandler;
         this.repositoryGenerator = repositoryGenerator;
 
         this.extensionManager = extensionManager;
+
+        this.active = false;
     }
 
     public boolean registerTileMapHandler(String name, boolean supportLoad, boolean supportSave, TileMapHandlerInterface handler) {
@@ -75,7 +79,23 @@ public final class Application {
         return this.repositoryGenerator.add(entity);
     }
 
+    /**
+     * Do not call this method in the extension! It will throw an exception.
+     *
+     * @throws IllegalStateException
+     * @return
+     */
     public boolean attachAvailableExtension() {
-        return this.extensionManager.attachAvailableExtension(this);
+        if (!this.active) {
+            this.active = true;
+
+            boolean result = this.extensionManager.attachAvailableExtension(this);
+
+            this.active = false;
+
+            return result;
+        }
+
+        throw new IllegalStateException("Method attachAvailableExtension() is already active.");
     }
 }

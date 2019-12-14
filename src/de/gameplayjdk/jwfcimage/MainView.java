@@ -169,6 +169,7 @@ public class MainView extends JFrame implements MainContractInterface.View {
             }
 
             // TODO: Add website/github link.
+            // TODO: Add popup to show installed plugin list.
 
             menuBar.add(menu);
         }
@@ -224,11 +225,23 @@ public class MainView extends JFrame implements MainContractInterface.View {
         }
     }
 
-    private int i = 0;
-
     @Override
     public void showSaveFileDialog(int handlerId) {
-        // TODO: Implement.
+        final JFileChooser fileChooser = new JFileChooser();
+        fileChooser.setMultiSelectionEnabled(false);
+        fileChooser.setAcceptAllFileFilterUsed(false);
+        fileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
+
+        FileFilter fileFilter = new MainView.FileFilterImage();
+        fileChooser.setFileFilter(fileFilter);
+
+        int state = fileChooser.showSaveDialog(this);
+
+        if (JFileChooser.APPROVE_OPTION == state) {
+            File file = fileChooser.getSelectedFile();
+
+            this.presenter.saveFile(file, handlerId);
+        }
     }
 
     @Override
@@ -272,7 +285,7 @@ public class MainView extends JFrame implements MainContractInterface.View {
 
             if (entity.isSupportSave()) {
                 JMenuItem menuItem = new JMenuItem(entity.getName());
-                menuItem.addActionListener(event -> this.showLoadFileDialog(entity.getId()));
+                menuItem.addActionListener(event -> this.showSaveFileDialog(entity.getId()));
 
                 this.menuSaveFile.add(menuItem);
             }
