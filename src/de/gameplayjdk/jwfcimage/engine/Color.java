@@ -22,7 +22,7 @@ public final class Color {
 
     public static final int COLOR_SPRITE_BORDER = 0x00FF00;
 
-    public static final int COLOR_TILE_VOID = 0x000000;
+    public static final int COLOR_TILE_EMPTY = 0x000000;
     public static final int COLOR_TILE_WATER = 0x0000FF;
     public static final int COLOR_TILE_GROUND = 0x964B00;
 }

@@ -16,18 +16,16 @@
  * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package de.gameplayjdk.jwfcimage.engine.data.tile;
+package de.gameplayjdk.jwfcimage.extension.simple.data.tile;
 
 import de.gameplayjdk.jwfcimage.engine.Color;
 import de.gameplayjdk.jwfcimage.engine.SpriteColor;
-import de.gameplayjdk.jwfcimage.engine.data.Tile;
-import de.gameplayjdk.jwfcimage.engine.data.TileMap;
+import de.gameplayjdk.jwfcimage.extension.simple.data.TileMapSimple;
+import de.gameplayjdk.jwfcimage.extension.simple.data.TileSimple;
 
-public class TileWater extends Tile {
+public class TileSimpleWater extends TileSimple {
 
-    public static Tile tile = new TileWater();
-
-    public TileWater() {
-        super(Color.COLOR_TILE_WATER, new SpriteColor(TileMap.TILE_SIZE, Color.COLOR_TILE_WATER));
+    public TileSimpleWater() {
+        super(Color.COLOR_TILE_WATER, new SpriteColor(TileMapSimple.TILE_SIZE, Color.COLOR_TILE_WATER));
     }
 }

@@ -18,8 +18,6 @@
 
 package de.gameplayjdk.jwfcimage.usecase;
 
-import de.gameplayjdk.jwfcimage.data.handler.TileMapGeneratorInterface;
-import de.gameplayjdk.jwfcimage.engine.data.TileMapAbstract;
 import de.gameplayjdk.jwfcimage.extension.access.Application;
 import de.gameplayjdk.jwfcimage.extension.simple.TileMapGeneratorSimple;
 import de.gameplayjdk.jwfcimage.extension.simple.TileMapHandlerSimple;

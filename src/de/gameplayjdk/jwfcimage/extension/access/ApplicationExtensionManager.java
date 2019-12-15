@@ -21,7 +21,6 @@ package de.gameplayjdk.jwfcimage.extension.access;
 import de.gameplayjdk.jwfcimage.extension.ExtensionInterface;
 import de.gameplayjdk.jwfcimage.utility.Extension;
 
-import javax.swing.plaf.IconUIResource;
 import java.io.File;
 import java.io.FileFilter;
 import java.io.IOException;

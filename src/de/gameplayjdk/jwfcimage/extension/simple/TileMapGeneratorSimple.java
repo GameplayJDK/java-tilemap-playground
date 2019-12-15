@@ -19,43 +19,70 @@
 package de.gameplayjdk.jwfcimage.extension.simple;
 
 import de.gameplayjdk.jwfcimage.data.handler.TileMapGeneratorInterface;
-import de.gameplayjdk.jwfcimage.engine.data.Tile;
 import de.gameplayjdk.jwfcimage.engine.data.TileAbstract;
-import de.gameplayjdk.jwfcimage.engine.data.TileMap;
 import de.gameplayjdk.jwfcimage.engine.data.TileMapAbstract;
+import de.gameplayjdk.jwfcimage.extension.simple.data.TileMapSimple;
+import de.gameplayjdk.jwfcimage.extension.simple.data.TileSimple;
 
 import java.util.Random;
 
 public class TileMapGeneratorSimple implements TileMapGeneratorInterface {
 
-    // TODO: Implement properly.
-
     private final Random random;
+
+    private final TileAbstract[] tileArray;
 
     public TileMapGeneratorSimple() {
         this.random = new Random();
+
+        this.tileArray = new TileSimple[] {
+                TileSimple.empty,
+                TileSimple.water,
+                TileSimple.ground,
+        };
     }
 
     @Override
     public TileMapAbstract generate(TileMapAbstract tileMap) {
+        tileMap = this.getTileMap(tileMap);
         TileAbstract[] map = tileMap.getMap();
 
-        int index = this.random.nextInt(map.length);
+        for (int i = 0; i < map.length; i++) {
+            TileAbstract tile = map[i];
 
-        TileAbstract tile = map[index];
+            if (null == tile) {
+                continue;
+            }
 
-        if (null == tile) {
-            return tileMap;
-        }
-
-        if (tile.getId() == Tile.empty.getId()) {
-            map[index] = Tile.water;
-        } else if (tile.getId() == Tile.water.getId()) {
-            map[index] = Tile.ground;
-        } else if (tile.getId() == Tile.ground.getId()) {
-            map[index] = Tile.empty;
+            map[i] = this.getTile(tile);
         }
 
         return tileMap;
+    }
+
+    private TileMapAbstract getTileMap(TileMapAbstract tileMap) {
+        TileAbstract[] map = tileMap.getMap();
+
+        TileMapAbstract tileMapNew = new TileMapSimple(tileMap.getWidth(), tileMap.getHeight(), tileMap.getTileSize());
+        TileAbstract[] mapNew = tileMapNew.getMap();
+
+        System.arraycopy(map, 0, mapNew, 0, mapNew.length);
+
+        return tileMapNew;
+    }
+
+    private TileAbstract getTile(TileAbstract tile) {
+        //int index = this.random.nextInt(this.tileArray.length);
+        //TileAbstract tileNew = this.tileArray[index];
+
+        if (tile.getId() == TileSimple.empty.getId()) {
+            return TileSimple.water;
+        } else if (tile.getId() == TileSimple.water.getId()) {
+            return TileSimple.ground;
+        } else if (tile.getId() == TileSimple.ground.getId()) {
+            return TileSimple.empty;
+        }
+
+        return null;
     }
 }

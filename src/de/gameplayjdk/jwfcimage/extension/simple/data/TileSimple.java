@@ -16,35 +16,35 @@
  * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package de.gameplayjdk.jwfcimage.engine.data;
+package de.gameplayjdk.jwfcimage.extension.simple.data;
 
 import de.gameplayjdk.jwfcimage.engine.Color;
-import de.gameplayjdk.jwfcimage.engine.EngineObjectInterface;
 import de.gameplayjdk.jwfcimage.engine.Sprite;
-import de.gameplayjdk.jwfcimage.engine.data.tile.TileEmpty;
-import de.gameplayjdk.jwfcimage.engine.data.tile.TileGround;
-import de.gameplayjdk.jwfcimage.engine.data.tile.TileWater;
+import de.gameplayjdk.jwfcimage.engine.data.TileAbstract;
+import de.gameplayjdk.jwfcimage.extension.simple.data.tile.TileSimpleEmpty;
+import de.gameplayjdk.jwfcimage.extension.simple.data.tile.TileSimpleGround;
+import de.gameplayjdk.jwfcimage.extension.simple.data.tile.TileSimpleWater;
 import de.gameplayjdk.jwfcimage.image.ImageScreen;
 
-public class Tile extends TileAbstract {
+public class TileSimple extends TileAbstract {
 
-    public static Tile empty;
-    public static Tile water;
-    public static Tile ground;
+    public static TileSimple empty;
+    public static TileSimple water;
+    public static TileSimple ground;
 
     private static boolean initializeReady = false;
 
     public static void initialize() {
-        if (!Tile.initializeReady) {
-            Tile.empty = new TileEmpty();
-            Tile.water = new TileWater();
-            Tile.ground = new TileGround();
+        if (!TileSimple.initializeReady) {
+            TileSimple.empty = new TileSimpleEmpty();
+            TileSimple.water = new TileSimpleWater();
+            TileSimple.ground = new TileSimpleGround();
 
-            Tile.initializeReady = true;
+            TileSimple.initializeReady = true;
         }
     }
 
-    public Tile(int id, Sprite sprite) {
+    public TileSimple(int id, Sprite sprite) {
         super(id, sprite);
     }
 

@@ -19,10 +19,13 @@
 // TODO: Refactor.
 package de.gameplayjdk.jwfcimage.image;
 
-import de.gameplayjdk.jwfcimage.engine.data.TileMap;
 import de.gameplayjdk.jwfcimage.engine.data.TileMapAbstract;
+import de.gameplayjdk.jwfcimage.extension.simple.data.TileMapSimple;
+import de.gameplayjdk.jwfcimage.extension.simple.data.TileSimple;
 import de.gameplayjdk.jwfcimage.loop.LoopCallbackInterface;
 import de.gameplayjdk.jwfcimage.utility.Vector;
+
+import java.util.Arrays;
 
 public class ImageLogic implements LoopCallbackInterface {
 
@@ -42,7 +45,10 @@ public class ImageLogic implements LoopCallbackInterface {
         this.screen = new ImageScreen(this.imageData.getWidth(), this.imageData.getHeight());
 
         // TODO: Move this out of here, when the use case for loading the internal tilemap is done.
-        this.tileMap = new TileMap(16, 16, TileMap.TILE_SIZE);
+        this.tileMap = new TileMapSimple(16, 16, TileMapSimple.TILE_SIZE);
+        {
+            Arrays.fill(this.tileMap.getMap(), TileSimple.empty);
+        }
     }
 
     @Override

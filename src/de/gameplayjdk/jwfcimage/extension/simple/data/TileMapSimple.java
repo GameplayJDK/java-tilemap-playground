@@ -16,34 +16,36 @@
  * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package de.gameplayjdk.jwfcimage.engine.data;
+package de.gameplayjdk.jwfcimage.extension.simple.data;
 
+import de.gameplayjdk.jwfcimage.engine.data.TileAbstract;
+import de.gameplayjdk.jwfcimage.engine.data.TileMapAbstract;
 import de.gameplayjdk.jwfcimage.image.ImageScreen;
 
-import java.util.Arrays;
-
-public class TileMap extends TileMapAbstract {
+public class TileMapSimple extends TileMapAbstract {
 
     public static final int TILE_SIZE = 16;
 
-    private final Tile[] map;
+    private final TileSimple[] map;
 
-    public TileMap(int width, int height, int tileSize) {
+    public TileMapSimple(int width, int height, int tileSize) {
         super(width, height, tileSize);
 
-        this.map = new Tile[this.width * this.height];
+        this.map = new TileSimple[this.width * this.height];
 
         this.initialize();
     }
 
     private void initialize() {
-        Tile.initialize();
-
-        Arrays.fill(this.map, Tile.empty);
+        TileSimple.initialize();
     }
 
     public void update(double deltaTime) {
-        for (Tile tile : this.map) {
+        for (TileSimple tile : this.map) {
+            if (null == tile) {
+                continue;
+            }
+
             tile.update(deltaTime);
         }
     }
@@ -51,7 +53,7 @@ public class TileMap extends TileMapAbstract {
     public void render(ImageScreen screen, int x, int y) {
         for (int w = 0; w < this.width; w++) {
             for (int h = 0; h < this.height; h++) {
-                Tile tile = this.map[(h * this.width) + w];
+                TileSimple tile = this.map[(h * this.width) + w];
 
                 if (null == tile) {
                     continue;

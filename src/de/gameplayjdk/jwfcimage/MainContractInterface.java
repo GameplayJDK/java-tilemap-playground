@@ -18,9 +18,6 @@
 
 package de.gameplayjdk.jwfcimage;
 
-import de.gameplayjdk.jwfcimage.data.entity.EntityTileMap;
-import de.gameplayjdk.jwfcimage.data.entity.EntityTileMapGenerator;
-import de.gameplayjdk.jwfcimage.data.entity.EntityTileMapHandler;
 import de.gameplayjdk.jwfcimage.image.ImageDataInterface;
 import de.gameplayjdk.jwfcimage.mvp.PresenterInterface;
 import de.gameplayjdk.jwfcimage.mvp.ViewInterface;
@@ -28,7 +25,6 @@ import de.gameplayjdk.jwfcimage.utility.Vector;
 import de.gameplayjdk.jwfcimage.view.MenuData;
 
 import java.io.File;
-import java.util.List;
 
 public interface MainContractInterface {
 

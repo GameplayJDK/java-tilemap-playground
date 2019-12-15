@@ -19,7 +19,7 @@
 package de.gameplayjdk.jwfcimage.image;
 
 import de.gameplayjdk.jwfcimage.engine.Sprite;
-import de.gameplayjdk.jwfcimage.engine.data.Tile;
+import de.gameplayjdk.jwfcimage.extension.simple.data.TileSimple;
 
 import java.util.Arrays;
 
@@ -119,7 +119,7 @@ public class ImageScreen implements ImageDataInterface {
      * @deprecated Prone to null pointer exception. Use {@link #drawSprite(int, int, Sprite)} instead in conjunction
      * with null check.
      */
-    public void drawTile(int x, int y, Tile tile) {
+    public void drawTile(int x, int y, TileSimple tile) {
         // TODO: Add null check.
 
         this.drawSprite(x, y, tile.getSprite());
