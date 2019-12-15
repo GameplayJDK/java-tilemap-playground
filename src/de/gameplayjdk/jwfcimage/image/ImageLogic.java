@@ -47,7 +47,8 @@ public class ImageLogic implements LoopCallbackInterface {
         // TODO: Move this out of here, when the use case for loading the internal tilemap is done.
         this.tileMap = new TileMapSimple(16, 16, TileMapSimple.TILE_SIZE);
         {
-            Arrays.fill(this.tileMap.getMap(), TileSimple.empty);
+            // TODO: Add automatic generation when starting the application.
+            //Arrays.fill(this.tileMap.getMap(), TileSimple.empty);
         }
     }
 

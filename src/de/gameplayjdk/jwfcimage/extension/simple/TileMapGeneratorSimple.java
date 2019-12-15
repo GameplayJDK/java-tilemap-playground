@@ -50,9 +50,10 @@ public class TileMapGeneratorSimple implements TileMapGeneratorInterface {
         for (int i = 0; i < map.length; i++) {
             TileAbstract tile = map[i];
 
-            if (null == tile) {
-                continue;
-            }
+            // This check is not needed, when it is done inside get tile.
+            //if (null == tile) {
+            //    continue;
+            //}
 
             map[i] = this.getTile(tile);
         }
@@ -72,17 +73,22 @@ public class TileMapGeneratorSimple implements TileMapGeneratorInterface {
     }
 
     private TileAbstract getTile(TileAbstract tile) {
-        //int index = this.random.nextInt(this.tileArray.length);
-        //TileAbstract tileNew = this.tileArray[index];
-
-        if (tile.getId() == TileSimple.empty.getId()) {
-            return TileSimple.water;
-        } else if (tile.getId() == TileSimple.water.getId()) {
-            return TileSimple.ground;
-        } else if (tile.getId() == TileSimple.ground.getId()) {
-            return TileSimple.empty;
+        if (null != tile) {
+            if (tile.getId() == TileSimple.empty.getId()) {
+                return TileSimple.water;
+            } else if (tile.getId() == TileSimple.water.getId()) {
+                return TileSimple.ground;
+            } else if (tile.getId() == TileSimple.ground.getId()) {
+                return TileSimple.empty;
+            }
         }
 
-        return null;
+        return this.getTileRandom();
+    }
+
+    private TileAbstract getTileRandom() {
+        int index = this.random.nextInt(this.tileArray.length);
+
+        return this.tileArray[index];
     }
 }
