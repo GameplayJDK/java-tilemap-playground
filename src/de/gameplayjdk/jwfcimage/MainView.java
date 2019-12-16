@@ -454,6 +454,7 @@ public class MainView extends JFrame implements MainContractInterface.View {
         public void mousePressed(MouseEvent event) {
             super.mousePressed(event);
 
+            // TODO: Check mouse button.
             this.changeCursor(event.getSource(), true);
 
             this.origin.set(event.getX(), event.getY());
@@ -463,6 +464,7 @@ public class MainView extends JFrame implements MainContractInterface.View {
         public void mouseReleased(MouseEvent event) {
             super.mouseReleased(event);
 
+            // TODO: Check mouse button.
             this.changeCursor(event.getSource(), false);
 
             this.origin.reset();

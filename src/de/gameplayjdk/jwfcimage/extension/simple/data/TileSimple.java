@@ -21,28 +21,9 @@ package de.gameplayjdk.jwfcimage.extension.simple.data;
 import de.gameplayjdk.jwfcimage.engine.Color;
 import de.gameplayjdk.jwfcimage.engine.Sprite;
 import de.gameplayjdk.jwfcimage.engine.data.TileAbstract;
-import de.gameplayjdk.jwfcimage.extension.simple.data.tile.TileSimpleEmpty;
-import de.gameplayjdk.jwfcimage.extension.simple.data.tile.TileSimpleGround;
-import de.gameplayjdk.jwfcimage.extension.simple.data.tile.TileSimpleWater;
 import de.gameplayjdk.jwfcimage.image.ImageScreen;
 
 public class TileSimple extends TileAbstract {
-
-    public static TileSimple empty;
-    public static TileSimple water;
-    public static TileSimple ground;
-
-    private static boolean initializeReady = false;
-
-    public static void initialize() {
-        if (!TileSimple.initializeReady) {
-            TileSimple.empty = new TileSimpleEmpty();
-            TileSimple.water = new TileSimpleWater();
-            TileSimple.ground = new TileSimpleGround();
-
-            TileSimple.initializeReady = true;
-        }
-    }
 
     public TileSimple(int id, Sprite sprite) {
         super(id, sprite);

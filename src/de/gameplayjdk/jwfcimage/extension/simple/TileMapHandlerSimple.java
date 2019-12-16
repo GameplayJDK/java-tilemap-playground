@@ -19,11 +19,10 @@
 package de.gameplayjdk.jwfcimage.extension.simple;
 
 import de.gameplayjdk.jwfcimage.data.handler.TileMapHandlerInterface;
-import de.gameplayjdk.jwfcimage.engine.SpriteColor;
 import de.gameplayjdk.jwfcimage.engine.data.TileAbstract;
 import de.gameplayjdk.jwfcimage.engine.data.TileMapAbstract;
+import de.gameplayjdk.jwfcimage.extension.simple.data.TileCacheSimple;
 import de.gameplayjdk.jwfcimage.extension.simple.data.TileMapSimple;
-import de.gameplayjdk.jwfcimage.extension.simple.data.TileSimple;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
@@ -33,6 +32,22 @@ import java.io.File;
 import java.io.IOException;
 
 public class TileMapHandlerSimple implements TileMapHandlerInterface {
+
+    private static TileMapHandlerSimple instance;
+
+    public static TileMapHandlerSimple getInstance() {
+        if (null == TileMapHandlerSimple.instance) {
+            TileMapHandlerSimple.instance = new TileMapHandlerSimple();
+        }
+
+        return TileMapHandlerSimple.instance;
+    }
+
+    private final TileCacheSimple tileMapCache;
+
+    private TileMapHandlerSimple() {
+        this.tileMapCache = TileCacheSimple.getInstance();
+    }
 
     @Override
     public TileMapAbstract load(File file) {
@@ -64,8 +79,7 @@ public class TileMapHandlerSimple implements TileMapHandlerInterface {
             }
 
             int color = imageData[index];
-            // TODO: Make this more dynamic by reusing color sprite objects or even tile objects.
-            map[index] = new TileSimple(color, new SpriteColor(TileMapSimple.TILE_SIZE, color));
+            map[index] = this.tileMapCache.fetch(color);
         }
 
         return tileMap;

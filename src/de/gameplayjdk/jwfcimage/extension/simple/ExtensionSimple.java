@@ -25,10 +25,10 @@ public final class ExtensionSimple implements ExtensionInterface {
 
     @Override
     public void attach(Application application) {
-        TileMapHandlerSimple tileMapHandler = new TileMapHandlerSimple();
+        TileMapHandlerSimple tileMapHandler = TileMapHandlerSimple.getInstance();
         application.registerTileMapHandler(tileMapHandler.getName(), tileMapHandler.isSupportLoad(), tileMapHandler.isSupportSave(), tileMapHandler);
 
-        TileMapGeneratorSimple tileMapGenerator = new TileMapGeneratorSimple();
+        TileMapGeneratorSimple tileMapGenerator = TileMapGeneratorSimple.getInstance();
         application.registerTileMapGenerator(tileMapGenerator.getName(), tileMapGenerator);
     }
 }

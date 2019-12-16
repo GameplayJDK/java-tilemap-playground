@@ -21,25 +21,43 @@ package de.gameplayjdk.jwfcimage.extension.simple;
 import de.gameplayjdk.jwfcimage.data.handler.TileMapGeneratorInterface;
 import de.gameplayjdk.jwfcimage.engine.data.TileAbstract;
 import de.gameplayjdk.jwfcimage.engine.data.TileMapAbstract;
+import de.gameplayjdk.jwfcimage.extension.simple.data.TileCacheSimple;
 import de.gameplayjdk.jwfcimage.extension.simple.data.TileMapSimple;
-import de.gameplayjdk.jwfcimage.extension.simple.data.TileSimple;
 
+import java.util.Arrays;
 import java.util.Random;
 
 public class TileMapGeneratorSimple implements TileMapGeneratorInterface {
 
+    private static TileMapGeneratorSimple instance;
+
+    public static TileMapGeneratorSimple getInstance() {
+        if (null == TileMapGeneratorSimple.instance) {
+            TileMapGeneratorSimple.instance = new TileMapGeneratorSimple();
+        }
+
+        return TileMapGeneratorSimple.instance;
+    }
+
     private final Random random;
+    private final int[] colorArray;
 
-    private final TileAbstract[] tileArray;
+    private final TileCacheSimple tileMapCache;
 
-    public TileMapGeneratorSimple() {
+    private TileMapGeneratorSimple() {
         this.random = new Random();
-
-        this.tileArray = new TileSimple[]{
-                TileSimple.empty,
-                TileSimple.water,
-                TileSimple.ground,
+        this.colorArray = new int[]{
+                0xFFFFFF,
+                0xFFFF00,
+                0xFF00FF,
+                0xFF0000,
+                0x00FFFF,
+                0x00FF00,
+                0x0000FF,
+                0x000000,
         };
+
+        this.tileMapCache = TileCacheSimple.getInstance();
     }
 
     @Override
@@ -48,20 +66,17 @@ public class TileMapGeneratorSimple implements TileMapGeneratorInterface {
         TileAbstract[] map = tileMap.getMap();
 
         for (int i = 0; i < map.length; i++) {
-            TileAbstract tile = map[i];
-
-            // This check is not needed, when it is done inside getTile().
-            //if (null == tile) {
-            //    continue;
-            //}
-
-            map[i] = this.getTile(tile);
+            map[i] = this.getTileRandom();
         }
 
         return tileMap;
     }
 
     private TileMapAbstract getTileMap(TileMapAbstract tileMap) {
+        if (null == tileMap) {
+            return this.getTileMapDefault();
+        }
+
         TileAbstract[] map = tileMap.getMap();
 
         TileMapAbstract tileMapNew = new TileMapSimple(tileMap.getWidth(), tileMap.getHeight(), tileMap.getTileSize());
@@ -72,24 +87,18 @@ public class TileMapGeneratorSimple implements TileMapGeneratorInterface {
         return tileMapNew;
     }
 
-    private TileAbstract getTile(TileAbstract tile) {
-        if (null != tile) {
-            if (tile.getId() == TileSimple.empty.getId()) {
-                return TileSimple.water;
-            } else if (tile.getId() == TileSimple.water.getId()) {
-                return TileSimple.ground;
-            } else if (tile.getId() == TileSimple.ground.getId()) {
-                return TileSimple.empty;
-            }
-        }
+    public TileMapAbstract getTileMapDefault() {
+        TileMapAbstract tileMap = new TileMapSimple(16, 16, TileMapSimple.TILE_SIZE);
+        Arrays.fill(tileMap.getMap(), this.tileMapCache.fetch(0x000000));
 
-        return this.getTileRandom();
+        return tileMap;
     }
 
     private TileAbstract getTileRandom() {
-        int index = this.random.nextInt(this.tileArray.length);
+        int index = this.random.nextInt(this.colorArray.length);
+        int color = this.colorArray[index];
 
-        return this.tileArray[index];
+        return this.tileMapCache.fetch(color);
     }
 
     public String getName() {

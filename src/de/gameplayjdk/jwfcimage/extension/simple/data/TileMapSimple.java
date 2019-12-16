@@ -32,12 +32,6 @@ public class TileMapSimple extends TileMapAbstract {
         super(width, height, tileSize);
 
         this.map = new TileSimple[this.width * this.height];
-
-        this.initialize();
-    }
-
-    private void initialize() {
-        TileSimple.initialize();
     }
 
     public void update(double deltaTime) {

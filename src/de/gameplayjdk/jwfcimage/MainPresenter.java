@@ -18,7 +18,6 @@
 
 package de.gameplayjdk.jwfcimage;
 
-import de.gameplayjdk.jwfcimage.data.RepositoryTileMap;
 import de.gameplayjdk.jwfcimage.data.entity.EntityTileMap;
 import de.gameplayjdk.jwfcimage.image.ImageDataInterface;
 import de.gameplayjdk.jwfcimage.image.ImageLogic;
@@ -42,6 +41,7 @@ public class MainPresenter implements MainContractInterface.Presenter {
 
     private final UseCaseHandler useCaseHandler;
 
+    private final UseCaseInitializeTileMap useCaseInitializeTileMap;
     private final UseCaseLoadTileMap useCaseLoadTileMap;
     private final UseCaseSaveTileMap useCaseSaveTileMap;
     private final UseCaseAttachAvailableExtension useCaseAttachAvailableExtension;
@@ -63,6 +63,7 @@ public class MainPresenter implements MainContractInterface.Presenter {
 
         this.useCaseHandler = UseCaseHandler.getInstance();
 
+        this.useCaseInitializeTileMap = UseCaseInitializeTileMap.newInstance();
         this.useCaseLoadTileMap = UseCaseLoadTileMap.newInstance();
         this.useCaseSaveTileMap = UseCaseSaveTileMap.newInstance();
         this.useCaseAttachAvailableExtension = UseCaseAttachAvailableExtension.newInstance();
@@ -75,6 +76,24 @@ public class MainPresenter implements MainContractInterface.Presenter {
     public void start() {
         this.loop.setActive(true);
         this.loop.start();
+
+        this.useCaseHandler.execute(this.useCaseInitializeTileMap, new UseCaseInitializeTileMap.RequestValue(), new UseCaseAbstract.UseCaseCallback<UseCaseInitializeTileMap.ResponseValue, UseCaseInitializeTileMap.ErrorResponseValue>() {
+            @Override
+            public void onSuccess(UseCaseInitializeTileMap.ResponseValue response) {
+                EntityTileMap entity = response.getEntity();
+
+                MainPresenter.this.imageLogic.setTileMap(entity.getTileMap());
+
+                MainPresenter.this.view.showStatusMessage("Initialized successfully.");
+            }
+
+            @Override
+            public void onError(UseCaseInitializeTileMap.ErrorResponseValue errorResponse) {
+                UseCaseInitializeTileMap.ErrorResponseValue.Type type = errorResponse.getType();
+
+                MainPresenter.this.view.showStatusMessage("Error: " + type.name());
+            }
+        });
     }
 
     @Override
@@ -94,17 +113,6 @@ public class MainPresenter implements MainContractInterface.Presenter {
     @Override
     public void setImageData(ImageDataInterface imageData) {
         this.imageLogic = new ImageLogic(imageData);
-
-        {
-            // TODO: Extract this into an use case.
-
-            RepositoryTileMap repository = RepositoryTileMap.getInstance();
-            EntityTileMap entity = repository.create();
-            entity.setTileMap(this.imageLogic.getTileMap());
-            if (repository.add(entity)) {
-                repository.setEntity(entity);
-            }
-        }
 
         this.callbackAdapter.setCallback(this.imageLogic);
     }
@@ -195,7 +203,11 @@ public class MainPresenter implements MainContractInterface.Presenter {
                 menuData.setListMap(response.getListMap());
 
                 EntityTileMap entity = response.getEntity();
-                menuData.setMapId(entity.getId());
+                if (null == entity) {
+                    menuData.setMapId(-1);
+                } else {
+                    menuData.setMapId(entity.getId());
+                }
 
                 MainPresenter.this.view.updateMenu(menuData);
 
