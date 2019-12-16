@@ -49,8 +49,9 @@ public class UseCaseFetchMenuData extends UseCaseAbstract<UseCaseFetchMenuData.R
         List<EntityTileMapHandler> listHandler = this.repositoryHandler.getAll();
         List<EntityTileMapGenerator> listGenerator = this.repositoryGenerator.getAll();
         List<EntityTileMap> listTileMap = this.repository.getAll();
+        EntityTileMap entity = this.repository.getEntity();
 
-        ResponseValue responseValue = new ResponseValue(listHandler, listGenerator, listTileMap);
+        ResponseValue responseValue = new ResponseValue(listHandler, listGenerator, listTileMap, entity);
 
         this.getUseCaseCallback()
                 .onSuccess(responseValue);
@@ -64,11 +65,13 @@ public class UseCaseFetchMenuData extends UseCaseAbstract<UseCaseFetchMenuData.R
         private final List<EntityTileMapHandler> listHandler;
         private final List<EntityTileMapGenerator> listGenerator;
         private final List<EntityTileMap> listMap;
+        private final EntityTileMap entity;
 
-        public ResponseValue(List<EntityTileMapHandler> listHandler, List<EntityTileMapGenerator> listGenerator, List<EntityTileMap> listMap) {
+        public ResponseValue(List<EntityTileMapHandler> listHandler, List<EntityTileMapGenerator> listGenerator, List<EntityTileMap> listMap, EntityTileMap entity) {
             this.listHandler = listHandler;
             this.listGenerator = listGenerator;
             this.listMap = listMap;
+            this.entity = entity;
         }
 
         public List<EntityTileMapHandler> getListHandler() {
@@ -81,6 +84,10 @@ public class UseCaseFetchMenuData extends UseCaseAbstract<UseCaseFetchMenuData.R
 
         public List<EntityTileMap> getListMap() {
             return this.listMap;
+        }
+
+        public EntityTileMap getEntity() {
+            return this.entity;
         }
     }
 

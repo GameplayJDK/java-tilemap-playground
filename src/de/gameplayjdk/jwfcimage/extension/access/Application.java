@@ -24,12 +24,15 @@ import de.gameplayjdk.jwfcimage.data.entity.EntityTileMapGenerator;
 import de.gameplayjdk.jwfcimage.data.entity.EntityTileMapHandler;
 import de.gameplayjdk.jwfcimage.data.handler.TileMapGeneratorInterface;
 import de.gameplayjdk.jwfcimage.data.handler.TileMapHandlerInterface;
+import de.gameplayjdk.jwfcimage.extension.ExtensionInterface;
 
 import java.util.function.Supplier;
 
 public final class Application {
 
-    public static Supplier<ApplicationExtensionManager> extensionManagerSupplier;
+    public static final String VERSION = "v1.0.0";
+
+    public static Supplier<ApplicationExtensionManagerInterface> extensionManagerSupplier;
 
     private static Application instance;
 
@@ -48,11 +51,11 @@ public final class Application {
     private final RepositoryTileMapHandler repositoryHandler;
     private final RepositoryTileMapGenerator repositoryGenerator;
 
-    private final ApplicationExtensionManager extensionManager;
+    private final ApplicationExtensionManagerInterface extensionManager;
 
     private boolean active;
 
-    public Application(RepositoryTileMapHandler repositoryHandler, RepositoryTileMapGenerator repositoryGenerator, ApplicationExtensionManager extensionManager) {
+    public Application(RepositoryTileMapHandler repositoryHandler, RepositoryTileMapGenerator repositoryGenerator, ApplicationExtensionManagerInterface extensionManager) {
         this.repositoryHandler = repositoryHandler;
         this.repositoryGenerator = repositoryGenerator;
 
@@ -93,9 +96,15 @@ public final class Application {
 
             this.active = false;
 
-            return result;
+            return true;
         }
 
         throw new IllegalStateException("Method attachAvailableExtension() is already active.");
+    }
+
+    public boolean attachAvailableExtension(ExtensionInterface extension) {
+        this.extensionManager.attachAvailableExtension(this, extension);
+
+        return true;
     }
 }

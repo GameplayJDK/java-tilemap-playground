@@ -18,7 +18,103 @@
 
 package de.gameplayjdk.jwfcimage.usecase;
 
-public class UseCaseSwitchTileMap {
+import de.gameplayjdk.jwfcimage.data.RepositoryTileMap;
+import de.gameplayjdk.jwfcimage.data.entity.EntityTileMap;
+import de.gameplayjdk.jwfcimage.engine.data.TileMapAbstract;
+import de.gameplayjdk.jwfcimage.mvp.clean.UseCaseAbstract;
 
-    // TODO: Implement.
+public class UseCaseSwitchTileMap extends UseCaseAbstract<UseCaseSwitchTileMap.RequestValue, UseCaseSwitchTileMap.ResponseValue, UseCaseSwitchTileMap.ErrorResponseValue> {
+
+    public static UseCaseSwitchTileMap newInstance() {
+        return new UseCaseSwitchTileMap(RepositoryTileMap.getInstance());
+    }
+
+    private RepositoryTileMap repository;
+
+    public UseCaseSwitchTileMap(RepositoryTileMap repository) {
+        this.repository = repository;
+    }
+
+    @Override
+    protected void executeUseCase(RequestValue requestValue) {
+        int mapId = requestValue.getMapId();
+
+        EntityTileMap entity = this.repository.getById(mapId);
+
+        if (null == entity) {
+            this.callOnErrorCallback(ErrorResponseValue.Type.ENTITY_NOT_SET);
+
+            return;
+        }
+
+        TileMapAbstract tileMap = entity.getTileMap();
+
+        if (null == tileMap) {
+            this.callOnErrorCallback(ErrorResponseValue.Type.TILEMAP_NOT_SET);
+
+            return;
+        }
+
+        this.repository.setEntity(entity);
+
+        this.callOnSuccessCallback(entity);
+    }
+
+    private void callOnSuccessCallback(EntityTileMap entity) {
+        ResponseValue responseValue = new ResponseValue(entity);
+
+        this.getUseCaseCallback()
+                .onSuccess(responseValue);
+    }
+
+    private void callOnErrorCallback(ErrorResponseValue.Type type) {
+        ErrorResponseValue errorResponseValue = new ErrorResponseValue(type);
+
+        this.getUseCaseCallback()
+                .onError(errorResponseValue);
+    }
+
+    public static class RequestValue implements UseCaseAbstract.RequestValueInterface {
+
+        private final int mapId;
+
+        public RequestValue(int mapId) {
+            this.mapId = mapId;
+        }
+
+        public int getMapId() {
+            return this.mapId;
+        }
+    }
+
+    public static class ResponseValue implements UseCaseAbstract.ResponseValueInterface {
+
+        private final EntityTileMap entity;
+
+        public ResponseValue(EntityTileMap entity) {
+            this.entity = entity;
+        }
+
+        public EntityTileMap getEntity() {
+            return this.entity;
+        }
+    }
+
+    public static class ErrorResponseValue implements UseCaseAbstract.ErrorResponseValueInterface {
+
+        public static enum Type {
+            ENTITY_NOT_SET,
+            TILEMAP_NOT_SET,
+        }
+
+        private final Type type;
+
+        public ErrorResponseValue(Type type) {
+            this.type = type;
+        }
+
+        public Type getType() {
+            return this.type;
+        }
+    }
 }

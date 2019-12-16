@@ -47,6 +47,7 @@ public class MainPresenter implements MainContractInterface.Presenter {
     private final UseCaseAttachAvailableExtension useCaseAttachAvailableExtension;
     private final UseCaseFetchMenuData useCaseFetchMenuData;
     private final UseCaseGenerateTileMap useCaseGenerateTileMap;
+    private final UseCaseSwitchTileMap useCaseSwitchTileMap;
 
     private ImageLogic imageLogic;
 
@@ -67,6 +68,7 @@ public class MainPresenter implements MainContractInterface.Presenter {
         this.useCaseAttachAvailableExtension = UseCaseAttachAvailableExtension.newInstance();
         this.useCaseFetchMenuData = UseCaseFetchMenuData.newInstance();
         this.useCaseGenerateTileMap = UseCaseGenerateTileMap.newInstance();
+        this.useCaseSwitchTileMap = UseCaseSwitchTileMap.newInstance();
     }
 
     @Override
@@ -192,8 +194,12 @@ public class MainPresenter implements MainContractInterface.Presenter {
                 menuData.setListGenerator(response.getListGenerator());
                 menuData.setListMap(response.getListMap());
 
+                EntityTileMap entity = response.getEntity();
+                menuData.setMapId(entity.getId());
+
                 MainPresenter.this.view.updateMenu(menuData);
 
+                // TODO: Remove when no longer needed for debugging.
                 MainPresenter.this.view.showStatusMessage("Successfully fetched menu data.");
             }
 
@@ -231,8 +237,26 @@ public class MainPresenter implements MainContractInterface.Presenter {
 
     @Override
     public void switchMap(int mapId) {
-        // TODO: Implement.
+        UseCaseSwitchTileMap.RequestValue requestValue = new UseCaseSwitchTileMap.RequestValue(mapId);
 
-        System.out.println("Not supported yet.");
+        this.useCaseHandler.execute(this.useCaseSwitchTileMap, requestValue, new UseCaseAbstract.UseCaseCallback<UseCaseSwitchTileMap.ResponseValue, UseCaseSwitchTileMap.ErrorResponseValue>() {
+            @Override
+            public void onSuccess(UseCaseSwitchTileMap.ResponseValue response) {
+                EntityTileMap entity = response.getEntity();
+
+                MainPresenter.this.imageLogic.setTileMap(entity.getTileMap());
+
+                MainPresenter.this.updateMenu();
+
+                MainPresenter.this.view.showStatusMessage("Successfully switched map.");
+            }
+
+            @Override
+            public void onError(UseCaseSwitchTileMap.ErrorResponseValue errorResponse) {
+                UseCaseSwitchTileMap.ErrorResponseValue.Type type = errorResponse.getType();
+
+                MainPresenter.this.view.showStatusMessage("Error: " + type.name());
+            }
+        });
     }
 }

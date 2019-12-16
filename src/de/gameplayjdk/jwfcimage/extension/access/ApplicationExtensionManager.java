@@ -37,8 +37,6 @@ import java.util.stream.Collectors;
 
 public final class ApplicationExtensionManager implements ApplicationExtensionManagerInterface {
 
-    // TODO: Test the class.
-
     private static final String EXTENSION_PATH = "./extension";
     private static final String EXTENSION_CLASS = "Extension-Class";
 
@@ -111,22 +109,32 @@ public final class ApplicationExtensionManager implements ApplicationExtensionMa
             return false;
         }
 
-        URLClassLoader classLoader = new URLClassLoader(listUrl.toArray(new URL[0]));
+        URLClassLoader classLoader = this.getClassLoader(listUrl);
 
         int count = 0;
 
         for (String extensionClassName : listExtensionClassName) {
-            if (!this.attach(application, classLoader, extensionClassName)) {
+            if (!this.attach(classLoader, extensionClassName)) {
                 continue;
             }
 
             count++;
         }
 
+        for (ExtensionInterface extension : this.extensionList) {
+            extension.attach(application);
+        }
+
         return (count > 0);
     }
 
-    private boolean attach(Application application, URLClassLoader classLoader, String extensionClassName) {
+    private URLClassLoader getClassLoader(List<URL> listUrl) {
+        URL[] arrayUrl = listUrl.toArray(new URL[0]);
+
+        return new URLClassLoader(arrayUrl, ApplicationExtensionManager.class.getClassLoader());
+    }
+
+    private boolean attach(URLClassLoader classLoader, String extensionClassName) {
         try {
             Class<?> extensionClass = classLoader.loadClass(extensionClassName);
 
@@ -135,14 +143,47 @@ public final class ApplicationExtensionManager implements ApplicationExtensionMa
 
             if (isExtension) {
                 ExtensionInterface extension = (ExtensionInterface) extensionClass.newInstance();
-                extension.attach(application);
 
-                this.extensionList.add(extension);
-
-                return true;
+                return this.addExtension(extension);
             }
         } catch (ClassNotFoundException | IllegalAccessException | InstantiationException | ClassCastException ex) {
             ex.printStackTrace();
+        }
+
+        return false;
+    }
+
+    public void clearExtension() {
+        this.extensionList.clear();
+    }
+
+    public boolean addExtension(ExtensionInterface extension) {
+        if (!this.hasExtension(extension)) {
+            return this.extensionList.add(extension);
+        }
+
+        return false;
+    }
+
+    public boolean hasExtension(final ExtensionInterface extension) {
+        return this.extensionList.stream()
+                .anyMatch(extensionInterface -> {
+                    String name = extensionInterface.getClass()
+                            .getName();
+
+                    return name.equals(
+                            extension.getClass()
+                                    .getName()
+                    );
+                });
+    }
+
+    @Override
+    public boolean attachAvailableExtension(Application application, ExtensionInterface extension) {
+        if (this.addExtension(extension)) {
+            extension.attach(application);
+
+            return true;
         }
 
         return false;
@@ -166,7 +207,7 @@ public final class ApplicationExtensionManager implements ApplicationExtensionMa
         @Override
         public boolean accept(File file) {
             if (file.isDirectory()) {
-                return true;
+                return false;
             }
 
             String extension = Extension.getExtension(file);

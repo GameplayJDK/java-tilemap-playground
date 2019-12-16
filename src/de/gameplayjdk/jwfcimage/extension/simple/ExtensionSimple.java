@@ -16,13 +16,19 @@
  * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package de.gameplayjdk.jwfcimage.extension.access;
+package de.gameplayjdk.jwfcimage.extension.simple;
 
 import de.gameplayjdk.jwfcimage.extension.ExtensionInterface;
+import de.gameplayjdk.jwfcimage.extension.access.Application;
 
-public interface ApplicationExtensionManagerInterface {
+public final class ExtensionSimple implements ExtensionInterface {
 
-    public boolean attachAvailableExtension(Application application);
+    @Override
+    public void attach(Application application) {
+        TileMapHandlerSimple tileMapHandler = new TileMapHandlerSimple();
+        application.registerTileMapHandler(tileMapHandler.getName(), tileMapHandler.isSupportLoad(), tileMapHandler.isSupportSave(), tileMapHandler);
 
-    public boolean attachAvailableExtension(Application application, ExtensionInterface extension);
+        TileMapGeneratorSimple tileMapGenerator = new TileMapGeneratorSimple();
+        application.registerTileMapGenerator(tileMapGenerator.getName(), tileMapGenerator);
+    }
 }

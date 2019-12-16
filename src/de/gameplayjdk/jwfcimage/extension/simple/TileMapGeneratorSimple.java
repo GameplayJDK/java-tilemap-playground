@@ -50,7 +50,7 @@ public class TileMapGeneratorSimple implements TileMapGeneratorInterface {
         for (int i = 0; i < map.length; i++) {
             TileAbstract tile = map[i];
 
-            // This check is not needed, when it is done inside get tile.
+            // This check is not needed, when it is done inside getTile().
             //if (null == tile) {
             //    continue;
             //}
@@ -90,5 +90,9 @@ public class TileMapGeneratorSimple implements TileMapGeneratorInterface {
         int index = this.random.nextInt(this.tileArray.length);
 
         return this.tileArray[index];
+    }
+
+    public String getName() {
+        return "Simple (built-in)";
     }
 }

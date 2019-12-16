@@ -268,7 +268,7 @@ public class MainView extends JFrame implements MainContractInterface.View {
     public void updateMenu(MenuData menuData) {
         this.updateMenuHandler(menuData.getListHandler());
         this.updateMenuGenerator(menuData.getListGenerator());
-        this.updateMenuSwitch(menuData.getListMap());
+        this.updateMenuSwitch(menuData.getListMap(), menuData.getMapId());
     }
 
     private void updateMenuHandler(List<EntityTileMapHandler> listHandler) {
@@ -312,12 +312,13 @@ public class MainView extends JFrame implements MainContractInterface.View {
         this.menuGenerate.repaint();
     }
 
-    private void updateMenuSwitch(List<EntityTileMap> listMap) {
+    private void updateMenuSwitch(List<EntityTileMap> listMap, int mapId) {
         this.menuSwitch.removeAll();
 
         for (final EntityTileMap entity : listMap) {
-            JMenuItem menuItem = new JMenuItem("Map #" + entity.getId());
+            JCheckBoxMenuItem menuItem = new JCheckBoxMenuItem("Map #" + entity.getId());
             menuItem.addActionListener(event -> this.presenter.switchMap(entity.getId()));
+            menuItem.setSelected(entity.getId() == mapId);
 
             this.menuSwitch.add(menuItem);
         }

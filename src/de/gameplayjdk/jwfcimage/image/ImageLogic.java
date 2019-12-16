@@ -16,16 +16,12 @@
  * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-// TODO: Refactor.
 package de.gameplayjdk.jwfcimage.image;
 
 import de.gameplayjdk.jwfcimage.engine.data.TileMapAbstract;
 import de.gameplayjdk.jwfcimage.extension.simple.data.TileMapSimple;
-import de.gameplayjdk.jwfcimage.extension.simple.data.TileSimple;
 import de.gameplayjdk.jwfcimage.loop.LoopCallbackInterface;
 import de.gameplayjdk.jwfcimage.utility.Vector;
-
-import java.util.Arrays;
 
 public class ImageLogic implements LoopCallbackInterface {
 

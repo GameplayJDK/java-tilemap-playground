@@ -19,8 +19,7 @@
 package de.gameplayjdk.jwfcimage.usecase;
 
 import de.gameplayjdk.jwfcimage.extension.access.Application;
-import de.gameplayjdk.jwfcimage.extension.simple.TileMapGeneratorSimple;
-import de.gameplayjdk.jwfcimage.extension.simple.TileMapHandlerSimple;
+import de.gameplayjdk.jwfcimage.extension.simple.ExtensionSimple;
 import de.gameplayjdk.jwfcimage.mvp.clean.UseCaseAbstract;
 
 public class UseCaseAttachAvailableExtension extends UseCaseAbstract<UseCaseAttachAvailableExtension.RequestValue, UseCaseAttachAvailableExtension.ResponseValue, UseCaseAttachAvailableExtension.ErrorResponseValue> {
@@ -31,25 +30,19 @@ public class UseCaseAttachAvailableExtension extends UseCaseAbstract<UseCaseAtta
 
     private final Application application;
 
-    private boolean attachDefault;
+    private final ExtensionSimple defaultExtension;
 
     public UseCaseAttachAvailableExtension(Application application) {
         this.application = application;
 
-        this.attachDefault = false;
+        this.defaultExtension = new ExtensionSimple();
     }
 
     @Override
     protected void executeUseCase(RequestValue requestValue) {
-        if (!this.attachDefault) {
-            this.attachDefault = true;
+        this.application.attachAvailableExtension(this.defaultExtension);
 
-            // TODO: Implement internal classes.
-            this.application.registerTileMapHandler("Simple (built-in)", true, true, new TileMapHandlerSimple());
-            this.application.registerTileMapGenerator("Simple (built-in)", new TileMapGeneratorSimple());
-        }
-
-        if (this.application.attachAvailableExtension() || this.attachDefault) {
+        if (this.application.attachAvailableExtension()) {
             this.callOnSuccessCallback();
 
             return;

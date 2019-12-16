@@ -27,7 +27,7 @@ import java.awt.image.DataBufferInt;
 
 public class JCanvas extends JPanel implements ImageDataInterface {
 
-    private final Image image;
+    private final BufferedImage image;
 
     public JCanvas(int width, int height) {
         super();
@@ -64,7 +64,7 @@ public class JCanvas extends JPanel implements ImageDataInterface {
     @Override
     public int[] getData() {
         return (
-                (DataBufferInt) ((BufferedImage) this.image).getRaster()
+                (DataBufferInt) this.image.getRaster()
                         .getDataBuffer()
         ).getData();
     }

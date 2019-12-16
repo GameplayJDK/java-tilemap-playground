@@ -29,6 +29,7 @@ public class MenuData {
     private List<EntityTileMapHandler> listHandler;
     private List<EntityTileMapGenerator> listGenerator;
     private List<EntityTileMap> listMap;
+    private int mapId;
 
     public List<EntityTileMapHandler> getListHandler() {
         return this.listHandler;
@@ -52,5 +53,13 @@ public class MenuData {
 
     public void setListMap(List<EntityTileMap> listMap) {
         this.listMap = listMap;
+    }
+
+    public int getMapId() {
+        return this.mapId;
+    }
+
+    public void setMapId(int mapId) {
+        this.mapId = mapId;
     }
 }
