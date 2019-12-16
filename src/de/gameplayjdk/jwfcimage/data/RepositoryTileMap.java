@@ -22,6 +22,8 @@ import de.gameplayjdk.jwfcimage.data.entity.EntityTileMap;
 
 public class RepositoryTileMap extends RepositoryAbstract<EntityTileMap> {
 
+    public static final int LIMIT = 16;
+
     private static RepositoryTileMap instance;
 
     public static RepositoryTileMap getInstance() {
@@ -43,6 +45,15 @@ public class RepositoryTileMap extends RepositoryAbstract<EntityTileMap> {
     @Override
     public EntityTileMap create() {
         return new EntityTileMap(this.getNewId());
+    }
+
+    @Override
+    public boolean add(EntityTileMap entity) {
+        while (!(this.entityList.size() < RepositoryTileMap.LIMIT)) {
+            this.entityList.remove(0);
+        }
+
+        return super.add(entity);
     }
 
     public EntityTileMap getEntity() {
