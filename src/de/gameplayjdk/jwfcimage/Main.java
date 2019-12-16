@@ -24,7 +24,7 @@ import javax.swing.*;
 
 public class Main {
 
-    public static final String WINDOW_TITLE = "java-wfc-image";
+    public static final String WINDOW_TITLE = "java-tilemap-playground";
     public static final int WINDOW_WIDTH = 800;
     public static final int WINDOW_HEIGHT = (Main.WINDOW_WIDTH / 16) * 9;
 

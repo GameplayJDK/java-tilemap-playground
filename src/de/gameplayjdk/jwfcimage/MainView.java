@@ -246,7 +246,7 @@ public class MainView extends JFrame implements MainContractInterface.View {
 
     @Override
     public void showAboutDialog() {
-        JOptionPane.showMessageDialog(this, "java-wfc-image by GameplayJDK", "About", JOptionPane.INFORMATION_MESSAGE);
+        JOptionPane.showMessageDialog(this, "java-tilemap-playground by GameplayJDK", "About", JOptionPane.INFORMATION_MESSAGE);
     }
 
     @Override
