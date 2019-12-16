@@ -85,8 +85,8 @@ public final class Application {
     /**
      * Do not call this method in the extension! It will throw an exception.
      *
-     * @throws IllegalStateException
      * @return
+     * @throws IllegalStateException
      */
     public boolean attachAvailableExtension() {
         if (!this.active) {

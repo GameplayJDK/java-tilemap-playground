@@ -39,7 +39,7 @@ public final class OperatingSystem {
     }
 
     public static boolean isUnix() {
-        return  OperatingSystem.operatingSystemName.contains("nix")
+        return OperatingSystem.operatingSystemName.contains("nix")
                 || OperatingSystem.operatingSystemName.contains("nux")
                 || OperatingSystem.operatingSystemName.contains("aix");
     }

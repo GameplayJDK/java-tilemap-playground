@@ -18,7 +18,6 @@
 
 package de.gameplayjdk.jwfcimage.extension.simple;
 
-import de.gameplayjdk.jwfc.api.Tile;
 import de.gameplayjdk.jwfcimage.data.handler.TileMapHandlerInterface;
 import de.gameplayjdk.jwfcimage.engine.SpriteColor;
 import de.gameplayjdk.jwfcimage.engine.data.TileAbstract;

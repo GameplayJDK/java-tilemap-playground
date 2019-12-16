@@ -35,7 +35,7 @@ public class TileMapGeneratorSimple implements TileMapGeneratorInterface {
     public TileMapGeneratorSimple() {
         this.random = new Random();
 
-        this.tileArray = new TileSimple[] {
+        this.tileArray = new TileSimple[]{
                 TileSimple.empty,
                 TileSimple.water,
                 TileSimple.ground,
