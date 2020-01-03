@@ -454,20 +454,22 @@ public class MainView extends JFrame implements MainContractInterface.View {
         public void mousePressed(MouseEvent event) {
             super.mousePressed(event);
 
-            // TODO: Check mouse button.
-            this.changeCursor(event.getSource(), true);
+            if (this.isMouseButtonLeft(event)) {
+                this.changeCursor(event.getSource(), true);
 
-            this.origin.set(event.getX(), event.getY());
+                this.origin.set(event.getX(), event.getY());
+            }
         }
 
         @Override
         public void mouseReleased(MouseEvent event) {
             super.mouseReleased(event);
 
-            // TODO: Check mouse button.
-            this.changeCursor(event.getSource(), false);
+            if (this.isMouseButtonLeft(event)) {
+                this.changeCursor(event.getSource(), false);
 
-            this.origin.reset();
+                this.origin.reset();
+            }
         }
 
         private void changeCursor(Object source, boolean moveActive) {
@@ -485,7 +487,7 @@ public class MainView extends JFrame implements MainContractInterface.View {
         public void mouseDragged(MouseEvent event) {
             super.mouseDragged(event);
 
-            if ((event.getModifiers() & InputEvent.BUTTON1_MASK) == InputEvent.BUTTON1_MASK) {
+            if (this.isMouseButtonLeft(event)) {
                 this.vector.set(event.getX(), event.getY());
                 this.vector.combine(-1 * this.origin.getX(), -1 * this.origin.getY());
 
@@ -494,6 +496,14 @@ public class MainView extends JFrame implements MainContractInterface.View {
                 this.origin.combine(this.vector);
                 this.vector.reset();
             }
+        }
+
+        private boolean isMouseButtonLeft(MouseEvent event) {
+            return (event.getModifiers() & InputEvent.BUTTON1_MASK) == InputEvent.BUTTON1_MASK;
+        }
+
+        private boolean isMouseButtonRight(MouseEvent event) {
+            return (event.getModifiers() & InputEvent.BUTTON2_MASK) == InputEvent.BUTTON2_MASK;
         }
     }
 
