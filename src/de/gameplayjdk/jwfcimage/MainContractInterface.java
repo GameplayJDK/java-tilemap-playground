@@ -41,6 +41,8 @@ public interface MainContractInterface {
 
         public void showSaveFileDialog(int handlerId);
 
+        public void openWebsiteLink();
+
         public void showAboutDialog();
 
         public void showStatusMessage(String message);

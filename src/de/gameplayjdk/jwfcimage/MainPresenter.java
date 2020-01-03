@@ -211,8 +211,9 @@ public class MainPresenter implements MainContractInterface.Presenter {
 
                 MainPresenter.this.view.updateMenu(menuData);
 
-                // TODO: Remove when no longer needed for debugging.
-                MainPresenter.this.view.showStatusMessage("Successfully fetched menu data.");
+                if (Main.APPLICATION_DEBUG) {
+                    MainPresenter.this.view.showStatusMessage("Successfully fetched menu data.");
+                }
             }
 
             @Override

@@ -24,7 +24,14 @@ import javax.swing.*;
 
 public class Main {
 
-    public static final String WINDOW_TITLE = "java-tilemap-playground";
+    public static final boolean APPLICATION_DEBUG = true;
+    public static final String APPLICATION_NAME = "java-tilemap-playground";
+    // TODO: The version has to match the repository tag version!
+    public static final Object APPLICATION_VERSION = "v1.0.1";
+    public static final String APPLICATION_AUTHOR = "GameplayJDK";
+    public static final String APPLICATION_WEBSITE = "https://github.com/GameplayJDK/java-tilemap-playground";
+
+    public static final String WINDOW_TITLE = Main.APPLICATION_NAME;
     public static final int WINDOW_WIDTH = 800;
     public static final int WINDOW_HEIGHT = (Main.WINDOW_WIDTH / 16) * 9;
 

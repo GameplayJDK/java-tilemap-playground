@@ -23,6 +23,7 @@ import de.gameplayjdk.jwfcimage.data.entity.EntityTileMapGenerator;
 import de.gameplayjdk.jwfcimage.data.entity.EntityTileMapHandler;
 import de.gameplayjdk.jwfcimage.swing.JCanvas;
 import de.gameplayjdk.jwfcimage.swing.JStatusBar;
+import de.gameplayjdk.jwfcimage.utility.Browser;
 import de.gameplayjdk.jwfcimage.utility.Extension;
 import de.gameplayjdk.jwfcimage.utility.Vector;
 import de.gameplayjdk.jwfcimage.view.MenuData;
@@ -163,13 +164,16 @@ public class MainView extends JFrame implements MainContractInterface.View {
             menu.setMnemonic(KeyEvent.VK_H);
 
             {
+                JMenuItem menuItem = new JMenuItem("View on GitHub", KeyEvent.VK_W);
+                menuItem.addActionListener(event -> this.openWebsiteLink());
+                menu.add(menuItem);
+            }
+
+            {
                 JMenuItem menuItem = new JMenuItem("About", KeyEvent.VK_A);
                 menuItem.addActionListener(event -> this.showAboutDialog());
                 menu.add(menuItem);
             }
-
-            // TODO: Add website/github link.
-            // TODO: Add popup to show installed plugin list.
 
             menuBar.add(menu);
         }
@@ -245,8 +249,15 @@ public class MainView extends JFrame implements MainContractInterface.View {
     }
 
     @Override
+    public void openWebsiteLink() {
+        Browser.open(Main.APPLICATION_WEBSITE);
+    }
+
+    @Override
     public void showAboutDialog() {
-        JOptionPane.showMessageDialog(this, "java-tilemap-playground by GameplayJDK", "About", JOptionPane.INFORMATION_MESSAGE);
+        String message = String.format("%1$s\n%2$s by %3$s", Main.APPLICATION_NAME, Main.APPLICATION_VERSION, Main.APPLICATION_AUTHOR);
+
+        JOptionPane.showMessageDialog(this, message, "About", JOptionPane.INFORMATION_MESSAGE);
     }
 
     @Override
